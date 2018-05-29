@@ -1,11 +1,8 @@
 <template lang="pug">
   .list
     .oper-container.clear-float
-      el-row(:gutter="10")
-        el-col(:span="3", :offset='18')
-          b-button(@click='add' type="primary") {{renderData.add}}
-        el-col(:span="3")
-          b-button(@click='editConfig' type="secondary") {{renderData.editConfig}}
+      i.el-icon-plus(@click="add" :title="renderData.add")
+      i.el-icon-setting(@click="editConfig" :title="renderData.editConfig")
     b-search-table(:optHandler='optHandler', :render-data="table", :url="page", ref="table")
 
     component(:is="visible.dialog", :currRow="currRow", :renderData="renderData", :visible="visible", :formItemList="formItemList", @refresh="refresh")
@@ -98,10 +95,17 @@
 
 <style lang="less">
   .oper-container {
-    .el-col {
-      .el-button {
-        width: 100% !important;
-      }
+    i {
+      cursor: pointer;
+      padding: 0 15px;
+      font-size: 15px;
+      font-weight: bold;
+    }
+    .el-icon-plus {
+      float: left;
+    }
+    .el-icon-setting {
+      float: right;
     }
     margin-bottom: 12px;
   }

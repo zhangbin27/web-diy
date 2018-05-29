@@ -1,5 +1,7 @@
 <template lang="pug">
   el-form.form-item-set(:model="item", :rules="cRules", ref="itemForm")
+    el-form-item(:label="renderData.fieldName", label-width="80px", prop="key")
+      b-input(:model.sync="item.key", :placeholder="renderData.inputField")
     el-form-item(:label="renderData.title", label-width="80px", prop="label")
       b-input(:model.sync="item.label", :placeholder="renderData.inputTitle")
     el-form-item(:label="renderData.promptText", label-width="80px", prop="placeholder")
@@ -181,6 +183,19 @@
       },
       cRules () {
         var basicRules = {
+          key: [
+            {
+              required: true,
+              message: this.renderData.pleaseEnter,
+              trigger: 'blur'
+            },
+            {
+              regex: constants.qianhouNoSpace,
+              message: this.renderData.qianhouNoSpace,
+              validator: validator.validate,
+              trigger: 'blur'
+            }
+          ],
           label: [
             {
               required: true,

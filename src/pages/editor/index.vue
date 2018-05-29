@@ -1,9 +1,9 @@
 <template lang="pug">
   .form-set
     el-row(:gutter="10").oper-container.clear-float.theme-border-D
-      el-col(:span="3", :offset='18')
+      el-col(:span="3", :offset='21')
         b-button(@click='saveEnable' v-ellipsis-title="" type="primary") {{renderData.save}}
-      el-col(:span="3")
+      //el-col(:span="3")
         b-button(@click='validateForm') {{renderData.validateForm}}
     .content
       .left.draggable-item-container.theme-bg-I
@@ -33,6 +33,8 @@
             el-form(ref="auditInfoForm", :rules="rules", :model="auditInfo", label-position="left")
               el-form-item(prop="name", :label="renderData.workflowName")
                 b-input(:model.sync="auditInfo.name", :placeholder="renderData.pleaseInput")
+              el-form-item(prop="_key", :label="renderData.pageId")
+                b-input(:model.sync="auditInfo._key", :placeholder="renderData.pleaseInput")
               //el-form-item(prop="description.label")
                 template(slot="label")
                   span.theme-color-C.inline-label(v-text="renderData.description", v-ellipsis-title="")
@@ -70,6 +72,7 @@
         currItem: {},
         auditInfo: {
           name: '',
+          _key: '',
           description: {
             label: '',
             key: ''
@@ -85,17 +88,18 @@
               trigger: 'blur'
             },
             {
-              regex: constants.text0To10Reg,
-              validator: validator.validate,
-              message: renderData.text0To10Limit,
-              trigger: 'blur'
-            },
-            {
               validator: validator.validate,
               message: renderData.noAllowSpace,
               test (val) {
                 return val.trim() === val
               },
+              trigger: 'blur'
+            }
+          ],
+          _key: [
+            {
+              required: true,
+              message: renderData.pleaseInput,
               trigger: 'blur'
             }
           ],
@@ -140,7 +144,7 @@
               var newItem = Object.assign({
                 label: '',
                 placeholder: '',
-                key: '_' + new Date().getTime(), // 这里获取取uid加上timestamp作为key
+                key: '',
                 rules: []
               }, template)
               if (targetIdx === _this.formItemList.length) {
@@ -349,8 +353,7 @@
         if (valid) {
           var params = {
             ...this.auditInfo,
-            dataSource: this.formItemList,
-            _key: this.page ? this.page : '_p' + new Date().getTime()
+            formItemList: this.formItemList
           }
           service.saveEnable(params).then(res => {
             this.$message({type: 'success', message: this.renderData.operateSuccess})

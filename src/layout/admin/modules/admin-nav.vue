@@ -6,6 +6,8 @@
 </template>
 
 <script>
+  import service from '../service'
+
   export default {
     name: 'admin-nav',
     data () {
@@ -16,10 +18,12 @@
     },
     methods: {
       getPageList () {
-        var pages = JSON.parse(localStorage.getItem('pages')) || []
-        pages.unshift({name: '编辑器', _key: 'editor'})
-        this.pages = pages
-        this.activePage = pages[0]._key
+        service.getPages().then(res => {
+          var pages = res.data
+          pages.unshift({name: '编辑器', _key: 'editor'})
+          this.pages = pages
+          this.activePage = pages[0]._key
+        })
       },
       toPage (page) {
         if (page === 'editor') {
