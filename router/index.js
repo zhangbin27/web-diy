@@ -80,6 +80,7 @@ router.post('/config/get', function (req, res) {
     data: {
       name: target.name,
       page: target._key,
+      _key: target._key,
       editUrl: target.editUrl,
       deleteUrl: target.deleteUrl,
       detailUrl: target.detailUrl,
