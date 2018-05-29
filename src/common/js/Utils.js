@@ -20,4 +20,12 @@ export const constants = _constants
 export const validator = _validator
 export const fetch = _fetch
 export const API = _API
+export const parserUrl = function (url) {
+  var query = url.split('?')[1] || ''
+  return query.split('&').reduce((res, item) => {
+    var [key, val] = item.split('=')
+    res[key] = val
+    return res
+  }, {})
+}
 export default utils

@@ -3,9 +3,9 @@
     .oper-container.clear-float
       i.el-icon-plus(@click="add" :title="renderData.add")
       i.el-icon-setting(@click="editConfig" :title="renderData.editConfig")
-    b-search-table(:optHandler='optHandler', :render-data="table", :url="page", ref="table")
+    b-search-table(:optHandler='optHandler', :render-data="table", :url="pageInfo.listUrl", ref="table" v-if="pageInfo.listUrl")
 
-    component(:is="visible.dialog", :currRow="currRow", :renderData="renderData", :visible="visible", :formItemList="formItemList", @refresh="refresh")
+    component(:is="visible.dialog", :currRow="currRow", :renderData="renderData", :visible="visible", :pageInfo="pageInfo", :formItemList="formItemList", @refresh="refresh")
 </template>
 
 <script>
@@ -22,6 +22,7 @@
       // z todo 可以做报表
       // z todo 可以兼容手机端
       return {
+        pageInfo: {},
         renderData: renderData,
         formItemList: [],
         currRow: {},
@@ -38,7 +39,8 @@
         }
       }
     },
-    computed: {},
+    computed: {
+    },
     methods: {
       editConfig () {
         this.$router.push({path: `/admin/editor?page=${this.page}`})
@@ -59,7 +61,7 @@
       },
       delete (row) {
         this.currRow = row
-        service.delete(row, this.page).then(res => {
+        service.delete(row, this.pageInfo.deleteUrl).then(res => {
           this.$message({type: 'success', message: this.renderData.operateSuccess})
           this.refresh()
         })
@@ -72,20 +74,16 @@
       'edit': edit,
       BSearchTable
     },
-    mounted () {
+    async mounted () {
       console.log('log', this.$router.page)
-      service.getTableConfig(this.page).then(res => {
+      await service.getTableConfig(this.page).then(res => {
         this.table.searchObj.searchFields = res.searchFields
         this.table.listObj.headerCols = res.headerCols
         this.formItemList = res.formItemList
-        this.$refs['table'].search()
+        this.pageInfo = res.info
       })
     },
     watch: {
-      'visible.dialog' (newVal) {
-        console.log('visible.dialog change')
-        !newVal && this.$refs['table'].search()
-      },
       'page' () {
         console.log('currentRoute.dialog change')
       }

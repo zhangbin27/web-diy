@@ -35,6 +35,12 @@
                 b-input(:model.sync="auditInfo.name", :placeholder="renderData.pleaseInput")
               el-form-item(prop="_key", :label="renderData.pageId")
                 b-input(:model.sync="auditInfo._key", :placeholder="renderData.pleaseInput")
+              el-form-item(prop="listUrl", label="List Url")
+                b-input(:model.sync="auditInfo.listUrl", :placeholder="renderData.pleaseInput")
+              el-form-item(prop="detailUrl", label="Detail Url")
+                b-input(:model.sync="auditInfo.detailUrl", :placeholder="renderData.pleaseInput")
+              el-form-item(prop="editUrl", label="Edit Url")
+                b-input(:model.sync="auditInfo.editUrl", :placeholder="renderData.pleaseInput")
               //el-form-item(prop="description.label")
                 template(slot="label")
                   span.theme-color-C.inline-label(v-text="renderData.description", v-ellipsis-title="")
@@ -72,6 +78,9 @@
         currItem: {},
         auditInfo: {
           name: '',
+          listUrl: '',
+          detailUrl: '',
+          editUrl: '',
           _key: '',
           description: {
             label: '',
@@ -96,7 +105,28 @@
               trigger: 'blur'
             }
           ],
+          listUrl: [
+            {
+              required: true,
+              message: renderData.pleaseInput,
+              trigger: 'blur'
+            }
+          ],
+          detailUrl: [
+            {
+              required: true,
+              message: renderData.pleaseInput,
+              trigger: 'blur'
+            }
+          ],
           _key: [
+            {
+              required: true,
+              message: renderData.pleaseInput,
+              trigger: 'blur'
+            }
+          ],
+          editUrl: [
             {
               required: true,
               message: renderData.pleaseInput,

@@ -1,19 +1,24 @@
 /* eslint-disable */
-import { fetch, API } from 'common/js/Utils'
+import { fetch, API, parserUrl } from 'common/js/Utils'
 
 export default {
-  delete (row, page) {
-    return fetch(API.page_delete, {row, page})
+  delete (row, url) {
+    var query = parserUrl(url)
+    return fetch(url, Object.assign(query, {row}))
   },
-  getDetail (row, page) {
-    return fetch(API.page_detail, {row, page})
+  getDetail (row, url) {
+    var query = parserUrl(url)
+    return fetch(url, Object.assign(query, {row}))
   },
-  edit ({page: page, data: params}) {
-    return fetch(API.page_edit, {params, page})
+  edit ({page: page, data: params}, url) {
+    var query = parserUrl(url)
+    return fetch(url, Object.assign(query, {params}))
   },
   getTableConfig (page = '') {
-    return fetch(API.config_get, {page}).then(({data: {formItemList}}) => {
+    return fetch(API.config_get, {page}).then(({data}) => {
+      var {formItemList} = data
       return {
+        info: data,
         formItemList: formItemList,
         headerCols: formItemList.map(item => ({field: item.key, label: item.label, list: item.list})),
         searchFields: formItemList.map(item => ({
