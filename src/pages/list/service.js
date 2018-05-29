@@ -1,18 +1,18 @@
 /* eslint-disable */
-import { fetch } from 'common/js/Utils'
+import { fetch, API } from 'common/js/Utils'
 
 export default {
   delete (row, page) {
-    return fetch('/api/page/delete', {row, page})
+    return fetch(API.page_delete, {row, page})
   },
   getDetail (row, page) {
-    return fetch('/api/page/detail', {row, page})
+    return fetch(API.page_detail, {row, page})
   },
   edit ({page: page, data: params}) {
-    return fetch('/api/page/edit', {params, page})
+    return fetch(API.page_edit, {params, page})
   },
   getTableConfig (page = '') {
-    return fetch('/api/config/get', {page}).then(({data: {formItemList}}) => {
+    return fetch(API.config_get, {page}).then(({data: {formItemList}}) => {
       return {
         formItemList: formItemList,
         headerCols: formItemList.map(item => ({field: item.key, label: item.label, list: item.list})),

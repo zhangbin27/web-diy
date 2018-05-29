@@ -1,10 +1,10 @@
-import { fetch } from 'common/js/Utils'
+import { fetch, API } from 'common/js/Utils'
 
 export default {
   saveEnable (params) {
-    return fetch('/api/config/set', params)
+    return fetch(API.config_set, params)
   },
   getAuditInfo (page) {
-    return fetch('/api/config/get', {page})
+    return fetch(API.config_get, {page})
   }
 }

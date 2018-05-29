@@ -1,7 +1,7 @@
-import {fetch} from 'common/js/Utils'
+import {fetch, API} from 'common/js/Utils'
 
 export default {
   getPages () {
-    return fetch('/api/config/list', {})
+    return fetch(API.config_list, {})
   }
 }
