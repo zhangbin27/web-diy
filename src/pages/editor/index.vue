@@ -37,6 +37,8 @@
                 b-input(:model.sync="auditInfo._key", :placeholder="renderData.pleaseInput")
               el-form-item(prop="listUrl", label="List Url")
                 b-input(:model.sync="auditInfo.listUrl", :placeholder="renderData.pleaseInput")
+              el-form-item(prop="deleteUrl", label="Delete Url")
+                b-input(:model.sync="auditInfo.deleteUrl", :placeholder="renderData.pleaseInput")
               el-form-item(prop="detailUrl", label="Detail Url")
                 b-input(:model.sync="auditInfo.detailUrl", :placeholder="renderData.pleaseInput")
               el-form-item(prop="editUrl", label="Edit Url")
@@ -80,6 +82,7 @@
           name: '',
           listUrl: '',
           detailUrl: '',
+          deleteUrl: '',
           editUrl: '',
           _key: '',
           description: {
@@ -106,6 +109,13 @@
             }
           ],
           listUrl: [
+            {
+              required: true,
+              message: renderData.pleaseInput,
+              trigger: 'blur'
+            }
+          ],
+          deleteUrl: [
             {
               required: true,
               message: renderData.pleaseInput,
