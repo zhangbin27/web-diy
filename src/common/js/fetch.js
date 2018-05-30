@@ -33,11 +33,11 @@ const headers = {
 }
 
 const queen = new Set()
-const basicUrl = 'http://localhost:3000'
+// const basicUrl = 'http://localhost:3000'
 const func = (url, parameters, option) => {
-  if (!url.includes('http')) {
-    url = basicUrl + url
-  }
+  // if (!url.includes('http')) {
+  //   url = basicUrl + url
+  // }
   return new Promise((resolve, reject) => {
     let key = url + JSON.stringify(parameters)
     // 防止重复请求
