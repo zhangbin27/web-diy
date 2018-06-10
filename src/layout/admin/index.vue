@@ -1,19 +1,27 @@
 <template lang="pug">
   .admin-layout
     .container.clear-float
-      admin-nav.left
-
+      admin-nav.left(:renderData="renderData")
       .content
+        admin-header(:renderData="renderData")
         router-view
 </template>
 
 <script>
   import adminNav from './modules/admin-nav'
+  import adminHeader from './modules/admin-header'
+  import renderData from './lang'
 
   export default {
     name: 'admin-layout',
+    data () {
+      return {
+        renderData
+      }
+    },
     components: {
-      adminNav
+      adminNav,
+      adminHeader
     }
   }
 </script>

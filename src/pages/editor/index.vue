@@ -5,7 +5,7 @@
         b-button(@click='saveEnable' v-ellipsis-title="" type="primary") {{renderData.save}}
       //el-col(:span="3")
         b-button(@click='validateForm') {{renderData.validateForm}}
-    .content
+    .content.theme-bg-H
       .left.draggable-item-container.theme-bg-I
         .title.theme-color-A {{renderData.controlBase}}
         .item.theme-bg-H.theme-border-D.theme-border-A-hover.theme-color-C(v-for="(temp, $index) in templateList", :key="temp.icon", :idx="$index",  v-draggable="handler", origin='left')

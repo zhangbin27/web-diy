@@ -1,6 +1,5 @@
 <template lang="pug">
-  el-menu.admin-nav(:default-active="activePage", @open="handleOpen" @close="handleClose"
-  background-color="#545c64" text-color="#fff" active-text-color="#ffd04b")
+  el-menu.admin-nav(:default-active="activePage", @open="handleOpen", @close="handleClose")
     el-menu-item(:index='page._key' v-for="page in pages", @click="toPage(page._key)", :key="page._key")
       span(slot='title') {{page.name}}
 </template>
@@ -16,11 +15,17 @@
         activePage: ''
       }
     },
+    props: {
+      renderData: {
+        required: true,
+        type: Object
+      }
+    },
     methods: {
       getPageList () {
         service.getPages().then(res => {
           var pages = res.data
-          pages.unshift({name: '编辑器', _key: 'editor'})
+          pages.unshift({name: this.renderData.editor, _key: 'editor'})
           this.pages = pages
           this.activePage = pages[0]._key
         })

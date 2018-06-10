@@ -9,14 +9,19 @@ import './common/js/commonComp'
 import './common/js'
 import './common/styleSheet/common.less'
 import './common/styleSheet/font/iconfont.js'
+import cookie from 'js-cookie'
+import locale from 'element-ui/lib/locale'
+import en from 'element-ui/lib/locale/lang/en'
+import cn from 'element-ui/lib/locale/lang/zh-CN'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
+locale.use(cookie.get('lang') === 'en' ? en : cn)
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
-  components: { App },
+  components: {App},
   template: '<App/>'
 })

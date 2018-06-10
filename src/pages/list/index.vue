@@ -1,8 +1,8 @@
 <template lang="pug">
   .list
     .oper-container.clear-float
-      i.el-icon-plus(@click="add" :title="renderData.add")
-      i.el-icon-setting(@click="editConfig" :title="renderData.editConfig")
+      i.el-icon-plus(@click="add", :title="renderData.add")
+      i.el-icon-setting(@click="editConfig", :title="renderData.editConfig")
     b-search-table(:optHandler='optHandler', :render-data="table", :url="pageInfo.listUrl", ref="table" v-if="pageInfo.listUrl")
 
     component(:is="visible.dialog", :currRow="currRow", :renderData="renderData", :visible="visible", :pageInfo="pageInfo", :formItemList="formItemList", @refresh="refresh")
