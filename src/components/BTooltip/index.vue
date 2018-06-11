@@ -32,3 +32,10 @@
   .b-tooltip {
   }
 </style>
+
+<style lang="less">
+  .theme-simple {
+    .b-tooltip {
+    }
+  }
+</style>

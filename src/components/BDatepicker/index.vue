@@ -77,3 +77,13 @@
     }
   }
 </style>
+
+<style lang="less" scoped>
+  .theme-simple {
+    .b-date-picker {
+      .el-date-editor--datetimerange.el-input, .el-date-editor--date{
+        width: 100%;
+      }
+    }
+  }
+</style>

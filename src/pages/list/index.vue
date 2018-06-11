@@ -3,7 +3,7 @@
     .oper-container.clear-float
       i.el-icon-plus(@click="add", :title="renderData.add")
       i.el-icon-setting(@click="editConfig", :title="renderData.editConfig")
-    b-search-table(:optHandler='optHandler', :render-data="table", :url="pageInfo.listUrl", ref="table" v-if="pageInfo.listUrl")
+    b-search-table(:optHandler='optHandler', :render-data="renderData", :url="pageInfo.listUrl", ref="table" v-if="pageInfo.listUrl")
 
     component(:is="visible.dialog", :currRow="currRow", :renderData="renderData", :visible="visible", :pageInfo="pageInfo", :formItemList="formItemList", @refresh="refresh")
 </template>
@@ -12,7 +12,6 @@
   import service from './service'
   import BSearchTable from 'components/BSearchTable'
   import BButton from 'components/BButton'
-  import renderData from './lang'
   import edit from './modules/edit'
 
   export default {
@@ -23,7 +22,7 @@
       // z todo 可以兼容手机端
       return {
         pageInfo: {},
-        renderData: renderData,
+        renderData: service.getRenderDataSync(),
         formItemList: [],
         currRow: {},
         page: this.$router.currentRoute.query.page,
@@ -31,7 +30,6 @@
           dialog: null,
           page: null
         },
-        table: renderData,
         optHandler: {
           edit: this.edit,
           detail: this.detail,
@@ -40,6 +38,12 @@
       }
     },
     computed: {
+    },
+    created () {
+      var params = {page: 'list'}
+      service.getRenderData(params).then(res => {
+        Object.assign(this.renderData, res)
+      })
     },
     methods: {
       editConfig () {
@@ -75,10 +79,10 @@
       BSearchTable
     },
     async mounted () {
-      console.log('log', this.$router.page)
+      console.log('log this.renderData', this.renderData)
       await service.getTableConfig(this.page).then(res => {
-        this.table.searchObj.searchFields = res.searchFields
-        this.table.listObj.headerCols = res.headerCols
+        this.renderData.searchFields = res.searchFields
+        this.renderData.headerCols = res.headerCols
         this.formItemList = res.formItemList
         this.pageInfo = res.info
       })

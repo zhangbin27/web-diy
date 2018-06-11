@@ -53,10 +53,22 @@
 </script>
 
 <style lang="less" scoped>
-  .el-dialog__body{
+  .el-dialog__body {
     padding-top: 20px
   }
+
   .el-select {
     width: 100%;
+  }
+</style>
+
+<style lang="less" scoped>
+  .theme-simple {
+    .el-dialog__body {
+      padding-top: 20px
+    }
+    .el-select {
+      width: 100%;
+    }
   }
 </style>

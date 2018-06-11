@@ -1,4 +1,4 @@
-import cookie from 'js-cookie'
+import cookie from 'Cookies'
 
 var all = {
   en: {

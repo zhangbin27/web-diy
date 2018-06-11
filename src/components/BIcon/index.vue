@@ -51,3 +51,17 @@
     display: inline-block;
   }
 </style>
+
+<style lang="less" scoped>
+  .theme-simple {
+    .icon {
+      width: 1em;
+      height: 1em;
+      vertical-align: -0.15em;
+      fill: currentColor;
+      overflow: hidden;
+      cursor: pointer;
+      display: inline-block;
+    }
+  }
+</style>

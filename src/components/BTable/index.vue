@@ -414,3 +414,101 @@
     }
   }
 </style>
+
+<style lang="less">
+  .theme-simple {
+    .header-icon {
+      margin-left: 0;
+    }
+
+    .el-table-scroll {
+      overflow: auto;
+    }
+
+    .el-popover-item-intable {
+      .title {
+        margin-top: 10px;
+      }
+      line-height: 26px;
+      .left {
+        width: 45%;
+        display: inline-block;
+      }
+      .right {
+        width: 50%;
+        padding-left: 10px;
+        display: inline-block;
+      }
+      span:nth-child(2) {
+        margin-left: 10px;
+      }
+    }
+
+    .b-table {
+      .el-table .table-cell {
+        width: 100%;
+        display: inline-block;
+      }
+      .table {
+        margin-top: 16px;
+      }
+      .batch-operate {
+        line-height: 36px;
+      }
+      .pagination {
+        float: right;
+        .el-pager li {
+          min-width: 21px;
+        }
+      }
+    }
+
+    .header-span {
+      max-width: 80%;
+      vertical-align: top;
+      display: inline-block;
+    }
+
+    .ipt-class {
+      text-align: center !important;
+    }
+
+    .tabPopover1 {
+      width: 40% !important;
+      position: relative;
+      top: 5px;
+      left: 5px;
+    }
+
+    .b-table {
+      .table-el-tooltip {
+        position: relative;
+        top: 5px;
+        left: 5px;
+      }
+      .hide-expand {
+        .el-table__expand-icon {
+          display: none;
+        }
+      }
+      .el-table .sort-caret.ascending {
+        top: 0 !important;
+      }
+      .el-table .sort-caret.descending {
+        bottom: 0 !important;
+      }
+      .img-icon-size {
+        font-size: 22px;
+      }
+      .el-table__expanded-cell {
+        padding: 0 !important;
+      }
+      .caret-wrapper {
+        height: 23px !important;
+      }
+      .el-table td, .el-table th {
+        padding: 8.5px 0 !important;
+      }
+    }
+  }
+</style>

@@ -61,7 +61,6 @@
   import BUpload from 'components/BUpload'
   import BFormItem from 'components/BFormItem'
   import FormItemSet from './modules/FormItemSet'
-  import renderData from './lang.js'
 
   export default {
     name: 'form-set',
@@ -69,13 +68,8 @@
       var _this = this
       return {
         page: this.$router.currentRoute.query.page,
-        messageMap: {
-          number: renderData.numberMessage,
-          longText: renderData.longTextMessage,
-          required: renderData.requiredMessage
-        },
         allFieldsMap: {},
-        renderData: renderData,
+        renderData: service.getRenderDataSync(),
         formSet: {},
         currItem: {},
         auditInfo: {
@@ -92,74 +86,6 @@
         },
         activePane: '1',
         formItemList: [],
-        rules: {
-          name: [
-            {
-              required: true,
-              message: renderData.pleaseInput,
-              trigger: 'blur'
-            },
-            {
-              validator: validator.validate,
-              message: renderData.noAllowSpace,
-              test (val) {
-                return val.trim() === val
-              },
-              trigger: 'blur'
-            }
-          ],
-          listUrl: [
-            {
-              required: true,
-              message: renderData.pleaseInput,
-              trigger: 'blur'
-            }
-          ],
-          deleteUrl: [
-            {
-              required: true,
-              message: renderData.pleaseInput,
-              trigger: 'blur'
-            }
-          ],
-          detailUrl: [
-            {
-              required: true,
-              message: renderData.pleaseInput,
-              trigger: 'blur'
-            }
-          ],
-          _key: [
-            {
-              required: true,
-              message: renderData.pleaseInput,
-              trigger: 'blur'
-            }
-          ],
-          editUrl: [
-            {
-              required: true,
-              message: renderData.pleaseInput,
-              trigger: 'blur'
-            }
-          ],
-          'description.label': [
-            {
-              regex: constants.text0To128Limit,
-              validator: validator.validate,
-              message: renderData.textLength128,
-              trigger: 'blur'
-            },
-            {
-              validator: validator.validate,
-              message: renderData.noAllowSpace,
-              test (val) {
-                return val.trim() === val
-              },
-              trigger: 'blur'
-            }
-          ]
-        },
         handler: {
           drop (event) {
             var el = event.target
@@ -200,11 +126,22 @@
             event.dataTransfer.setData('origin', event.target.getAttribute('origin'))
           }
         },
-        templateList: [
+        model: {}
+      }
+    },
+    created () {
+      var params = {page: 'editor'}
+      service.getRenderData(params).then(res => {
+        Object.assign(this.renderData, res)
+      })
+    },
+    computed: {
+      templateList () {
+        return [
           {
             type: 'input',
             icon: 'inputbox',
-            label: renderData.singleLineInputBox,
+            label: this.renderData.singleLineInputBox,
             list: true,
             detail: true,
             search: true,
@@ -213,7 +150,7 @@
           {
             type: 'textarea',
             icon: 'multilineinputbox',
-            label: renderData.multipleInputBox,
+            label: this.renderData.multipleInputBox,
             list: true,
             detail: true,
             search: true,
@@ -223,7 +160,7 @@
             type: 'select',
             icon: 'radio',
             dataSource: [],
-            label: renderData.radio,
+            label: this.renderData.radio,
             list: true,
             detail: true,
             search: true,
@@ -234,7 +171,7 @@
             icon: 'checkbox',
             multiple: true,
             dataSource: [],
-            label: renderData.checkbox,
+            label: this.renderData.checkbox,
             list: true,
             detail: true,
             search: true,
@@ -243,7 +180,7 @@
 //          {
 //            type: 'datetimerange',
 //            icon: 'date',
-//            label: renderData.dateRange,
+//            label: this.renderData.dateRange,
 //            format: 'yyyy-MM-dd mm:ss',
 //            hasInterval: false,
 //            list: true,
@@ -254,7 +191,7 @@
           {
             type: 'text',
             icon: 'explanatorytext',
-            label: renderData.caption,
+            label: this.renderData.caption,
             list: false,
             detail: true,
             search: false,
@@ -263,51 +200,122 @@
           // {
           //   type: 'upload',
           //   icon: 'file',
-          //   label: renderData.enclosure
+          //   label: this.renderData.enclosure
           // },
           // {
           //   type: 'cascadeSelect',
           //   icon: 'Group',
-          //   label: renderData.cascadeInquire,
+          //   label: this.renderData.cascadeInquire,
           //   follow: [],
           //   dataSource: ''
           // }
-        ],
-        regexObj: {
+        ]
+      },
+      regexObj () {
+        return {
           longText: {
             name: 'longText',
-            label: renderData.longTextRule,
+            label: this.renderData.longTextRule,
             rule: {
               name: 'longText',
               regex: constants.longTextRule,
               validator: validator.validate,
-              message: renderData.content1000More,
+              message: this.renderData.content1000More,
               trigger: 'blur'
             }
           },
           number: {
             name: 'number',
-            label: renderData.numberRule,
+            label: this.renderData.numberRule,
             rule: {
               name: 'number',
               regex: constants.numberRule,
               validator: validator.validate,
-              message: renderData.pleaseInput,
+              message: this.renderData.pleaseInput,
               trigger: 'blur'
             }
           },
           required: {
             name: 'required',
-            label: renderData.required,
+            label: this.renderData.required,
             rule: {
               name: 'required',
               required: true,
-              message: renderData.pleaseInput,
+              message: this.renderData.pleaseInput,
               trigger: 'blur'
             }
           }
-        },
-        model: {}
+        }
+      },
+      rules () {
+        return {
+          name: [
+            {
+              required: true,
+              message: this.renderData.pleaseInput,
+              trigger: 'blur'
+            },
+            {
+              validator: validator.validate,
+              message: this.renderData.noAllowSpace,
+              test (val) {
+                return val.trim() === val
+              },
+              trigger: 'blur'
+            }
+          ],
+          listUrl: [
+            {
+              required: true,
+              message: this.renderData.pleaseInput,
+              trigger: 'blur'
+            }
+          ],
+          deleteUrl: [
+            {
+              required: true,
+              message: this.renderData.pleaseInput,
+              trigger: 'blur'
+            }
+          ],
+          detailUrl: [
+            {
+              required: true,
+              message: this.renderData.pleaseInput,
+              trigger: 'blur'
+            }
+          ],
+          _key: [
+            {
+              required: true,
+              message: this.renderData.pleaseInput,
+              trigger: 'blur'
+            }
+          ],
+          editUrl: [
+            {
+              required: true,
+              message: this.renderData.pleaseInput,
+              trigger: 'blur'
+            }
+          ],
+          'description.label': [
+            {
+              regex: constants.text0To128Limit,
+              validator: validator.validate,
+              message: this.renderData.textLength128,
+              trigger: 'blur'
+            },
+            {
+              validator: validator.validate,
+              message: this.renderData.noAllowSpace,
+              test (val) {
+                return val.trim() === val
+              },
+              trigger: 'blur'
+            }
+          ]
+        }
       }
     },
     methods: {
@@ -321,7 +329,7 @@
               test (val) {
                 return !!val // 要求checkbox 必须为true
               },
-              message: this.messageMap[ruleItem],
+              message: this.renderData[ruleItem],
               trigger: ['blur', 'change']
             })
           } else if (ruleItem === 'required' && item.type === 'upload') {
@@ -331,7 +339,7 @@
               test (val) {
                 return !!val.url // 要求upload 必须为有url
               },
-              message: this.messageMap['required'],
+              message: this.renderData['required'],
               trigger: ['blur', 'change']
             })
           } else if (ruleItem.includes('api')) {
@@ -346,7 +354,7 @@
               validator: validator.validate
             })
           } else {
-            rule.message = this.messageMap[ruleItem]
+            rule.message = this.renderData[ruleItem]
             res.push(rule)
           }
 

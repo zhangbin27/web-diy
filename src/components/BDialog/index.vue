@@ -74,5 +74,15 @@
       display: inline-block;
     }
   }
+</style>
 
+<style lang="less" scoped>
+  .theme-simple {
+    .b-dialog {
+      .title {
+        line-height: 38px;
+        display: inline-block;
+      }
+    }
+  }
 </style>

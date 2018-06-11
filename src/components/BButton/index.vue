@@ -7,8 +7,7 @@
   export default {
     name: 'b-button',
     data () {
-      return {
-      }
+      return {}
     },
     props: {
       disabled: {
@@ -51,5 +50,13 @@
 <style lang="less">
   .el-button:hover {
     border-color: #71DAF9;
+  }
+</style>
+
+<style lang="less">
+  .theme-simple {
+    .el-button:hover {
+      border-color: #71DAF9;
+    }
   }
 </style>

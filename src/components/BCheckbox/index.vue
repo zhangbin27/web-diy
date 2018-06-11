@@ -62,5 +62,10 @@
   }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
+</style>
+
+<style lang="less">
+  .theme-simple {
+  }
 </style>

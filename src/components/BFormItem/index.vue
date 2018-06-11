@@ -150,3 +150,21 @@
     }
   }
 </style>
+
+<style lang="less" scoped>
+  .theme-simple {
+    .b-form-item {
+    .el-date-editor--datetimerange.el-input {
+      width: 100%;
+    }
+    .el-select {
+      width: 100%;
+    }
+    .cascade-select {
+      .sub-info {
+        white-space: pre;
+      }
+    }
+  }
+  }
+</style>

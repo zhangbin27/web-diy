@@ -10,14 +10,20 @@
 <script>
   import adminNav from './modules/admin-nav'
   import adminHeader from './modules/admin-header'
-  import renderData from './lang'
+  import service from './service'
 
   export default {
     name: 'admin-layout',
     data () {
       return {
-        renderData
+        renderData: service.getRenderDataSync({page: 'admin'})
       }
+    },
+    created () {
+      var params = {page: 'admin'}
+      service.getRenderData(params).then(res => {
+        Object.assign(this.renderData, res)
+      })
     },
     components: {
       adminNav,
@@ -27,45 +33,47 @@
 </script>
 
 <style lang="less">
-  html{
+  html {
     height: 100%;
-    body{
+    body {
       height: 100%;
       min-width: 850px;
     }
   }
 
-  .admin-layout{
+  .admin-layout {
     height: 100%;
     display: flex;
     flex-direction: column;
-    .container{
-      flex-grow:1;
+    .container {
+      flex-grow: 1;
       display: flex;
       height: 100%;
       .left {
         width: 200px;
         padding: 50px 0;
       }
-      .content{
+      .content {
         padding: 20px;
         position: relative;
-        flex-grow:1;
+        flex-grow: 1;
         overflow-y: auto;
         background-size: 0 0;
       }
     }
   }
-  @media screen and  (min-width:1250px) {
-    .admin-layout{
-      .container{
+
+  @media screen and  (min-width: 1250px) {
+    .admin-layout {
+      .container {
       }
     }
   }
-  @media screen and (max-width:1250px) {
-    .admin-layout{
-      .container{
-        .content{
+
+  @media screen and (max-width: 1250px) {
+    .admin-layout {
+      .container {
+        .content {
         }
       }
     }

@@ -13,18 +13,20 @@
         el-dropdown-item(command="cn") 中文简体
         el-dropdown-item(command='en') English
     span.colors.theme-color-A(@click="chooseColor")  {{renderData.color}}
-    edit-color(:renderData="renderData" v-if="showColorModal", @close="closeModal")
+    component(:is="visible.dialog", :renderData="renderData" v-if="showColorModal", @close="closeModal")
 </template>
 
 <script>
   import service from '../service'
   import editColor from './edit-color'
-  import cookie from 'js-cookie'
+  import editText from './edit-text'
+  import cookie from 'Cookies'
 
   export default {
     name: 'admin-header',
     data () {
       return {
+        visible: {dialog: null},
         lang: 'en',
         showColorModal: false,
         theme: 'default'
@@ -37,14 +39,18 @@
       }
     },
     components: {
-      editColor
+      editColor,
+      editText
     },
     methods: {
       closeModal () {
-        this.showColorModal = false
+        this.visible.dialog = null
+      },
+      configText () {
+        this.visible.dialog = 'edit-text'
       },
       chooseColor () {
-        this.showColorModal = true
+        this.visible.dialog = 'edit-color'
       },
       themeChange (theme) {
         this.theme = theme
