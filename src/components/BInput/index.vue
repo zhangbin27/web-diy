@@ -78,21 +78,48 @@
   }
 </script>
 
-<style lang="less" scoped>
-  .b-password {
-    display: inline;
-    line-height: 1em;
-    position: relative;
-    .icon {
-      user-select: none;
-      display: inline-block;
-      position: absolute;
-      right: 20px;
-      top: -5px;
-      background: #fff;
-      width: 37px;
-      height: 28px;
-      padding: 5px 10px;
+<style lang="less">
+  .theme-default {
+    .b-password {
+      display: inline;
+      line-height: 1em;
+      position: relative;
+      .icon {
+        user-select: none;
+        display: inline-block;
+        position: absolute;
+        right: 20px;
+        top: -5px;
+        background: #fff;
+        width: 37px;
+        height: 28px;
+        padding: 5px 10px;
+      }
+    }
+  }
+</style>
+
+<style lang="less">
+  .theme-simple {
+    .b-password {
+      display: inline;
+      line-height: 1em;
+      position: relative;
+      .icon {
+        user-select: none;
+        display: inline-block;
+        position: absolute;
+        right: 20px;
+        top: -5px;
+        background: #fff;
+        width: 37px;
+        height: 28px;
+        padding: 5px 10px;
+      }
+    }
+    .el-input__inner, .el-textarea__inner {
+      border-width: 0 !important;
+      border-bottom-width: 1px !important;
     }
   }
 </style>

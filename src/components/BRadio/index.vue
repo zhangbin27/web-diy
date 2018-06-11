@@ -37,3 +37,7 @@
 
 <style lang="less" scoped>
 </style>
+<style lang="less" scoped>
+  .theme-simple {
+  }
+</style>

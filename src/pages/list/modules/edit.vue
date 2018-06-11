@@ -13,18 +13,22 @@
   import BButton from 'components/BButton'
   import BDialog from 'components/BDialog'
   import service from '../service'
-  import renderData from '../lang'
 
   export default {
     name: 'edit',
     data () {
       return {
         page: this.$router.currentRoute.query.page,
-        renderData: renderData,
         tempForm: {}
       }
     },
     props: {
+      renderData: {
+        required: true
+      },
+      pageInfo: {
+        required: true
+      },
       formItemList: {
         required: true
       },
@@ -42,7 +46,7 @@
     },
     methods: {
       getDetail () {
-        service.getDetail(this.currRow, this.page).then(({data}) => {
+        service.getDetail(this.currRow, this.pageInfo.detailUrl).then(({data}) => {
           Object.keys(data).forEach(key => {
             this.$set(this.tempForm, key, data[key])
           })
@@ -61,7 +65,7 @@
                 ...this.visible.dialog === 'add' ? {_key: '_key' + new Date().getTime()} : {_key: this.currRow._key}
               }
             }
-            service.edit(params).then(res => {
+            service.edit(params, this.pageInfo.editUrl).then(res => {
               this.$message({type: 'success', message: this.renderData.operateSuccess})
               this.close()
               this.$emit('refresh')

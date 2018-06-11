@@ -1,7 +1,8 @@
-import { fetch } from 'common/js/Utils'
+import { fetch, parserUrl } from 'common/js/Utils'
 
 export default {
-  getData (page, params = {}) {
-    return fetch('/api/page/list', Object.assign({page}, params))
+  getData (url, params = {}) {
+    var query = parserUrl(url)
+    return fetch(url, Object.assign(params, query))
   }
 }

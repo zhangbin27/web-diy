@@ -77,11 +77,23 @@
   }
 </script>
 
-<style scoped>
-  .b-upload-single.hidden >>> .el-upload {
+<style lang="less">
+  .b-upload-single.hidden .el-upload {
     display: none;
   }
-  .b-upload-single.hidden >>> .el-upload__tip {
+
+  .b-upload-single.hidden .el-upload__tip {
     display: none;
+  }
+</style>
+
+<style lang="less">
+  .theme-simple {
+    .b-upload-single.hidden .el-upload {
+      display: none;
+    }
+    .b-upload-single.hidden .el-upload__tip {
+      display: none;
+    }
   }
 </style>

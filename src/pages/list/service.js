@@ -1,19 +1,37 @@
 /* eslint-disable */
-import { fetch } from 'common/js/Utils'
+import { fetch, API, parserUrl, lang } from 'common/js/Utils'
 
 export default {
-  delete (row, page) {
-    return fetch('/api/page/delete', {row, page})
+  getRenderDataSync (params) {
+    return lang[params.page]
   },
-  getDetail (row, page) {
-    return fetch('/api/page/detail', {row, page})
+  getRenderData (params) {
+    var text = JSON.parse(localStorage.getItem('text') || '{}')
+    var pageLang = Object.assign(lang[params.page], text[params.page])
+    var str = JSON.stringify(pageLang)
+    var keys = ['__edit__', '__delete__', '__detail__']
+    keys.forEach(key => {
+      str = str.replace(new RegExp(key, 'g'), pageLang[key])
+    })
+    return Promise.resolve(JSON.parse(str))
   },
-  edit ({page: page, data: params}) {
-    return fetch('/api/page/edit', {params, page})
+  delete (row, url) {
+    var query = parserUrl(url)
+    return fetch(url, Object.assign(query, {row}))
+  },
+  getDetail (row, url) {
+    var query = parserUrl(url)
+    return fetch(url, Object.assign(query, {row}))
+  },
+  edit ({page: page, data: params}, url) {
+    var query = parserUrl(url)
+    return fetch(url, Object.assign(query, {params}))
   },
   getTableConfig (page = '') {
-    return fetch('/api/config/get', {page}).then(({data: {formItemList}}) => {
+    return fetch(API.config_get, {page}).then(({data}) => {
+      var {formItemList} = data
       return {
+        info: data,
         formItemList: formItemList,
         headerCols: formItemList.map(item => ({field: item.key, label: item.label, list: item.list})),
         searchFields: formItemList.map(item => ({

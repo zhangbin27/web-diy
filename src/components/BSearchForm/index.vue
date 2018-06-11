@@ -101,7 +101,7 @@
   }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
   .b-search-form {
     .b-form-item {
       margin-bottom: 10px;
@@ -110,15 +110,34 @@
       width: 100%;
     }
   }
-</style>
 
-<style lang="less">
   .b-form-item {
     .b-button {
       width: 100%;
     }
     .el-range-editor.el-input__inner {
       width: 100%;
+    }
+  }
+</style>
+
+<style lang="less">
+  .theme-simple {
+    .b-search-form {
+      .b-form-item {
+        margin-bottom: 10px;
+      }
+      .el-select {
+        width: 100%;
+      }
+    }
+    .b-form-item {
+      .b-button {
+        width: 100%;
+      }
+      .el-range-editor.el-input__inner {
+        width: 100%;
+      }
     }
   }
 </style>

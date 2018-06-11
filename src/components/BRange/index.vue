@@ -67,3 +67,25 @@
     }
   }
 </style>
+
+<style lang="less">
+  .theme-simple {
+    .b-range {
+    border: 1px solid;
+    border-radius: 4px;
+    padding: 0 1px;
+    .b-input {
+      width: 49%;
+      .el-input__inner {
+        border-width: 0 !important;
+        height: 38px;
+      }
+    }
+    .inline-split {
+      width: 2%;
+      display: inline-block;
+      text-align: center;
+    }
+  }
+  }
+</style>

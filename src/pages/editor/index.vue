@@ -5,7 +5,7 @@
         b-button(@click='saveEnable' v-ellipsis-title="" type="primary") {{renderData.save}}
       //el-col(:span="3")
         b-button(@click='validateForm') {{renderData.validateForm}}
-    .content
+    .content.theme-bg-H
       .left.draggable-item-container.theme-bg-I
         .title.theme-color-A {{renderData.controlBase}}
         .item.theme-bg-H.theme-border-D.theme-border-A-hover.theme-color-C(v-for="(temp, $index) in templateList", :key="temp.icon", :idx="$index",  v-draggable="handler", origin='left')
@@ -30,11 +30,19 @@
       .right.theme-bg-I
         el-tabs(v-model='activePane')
           el-tab-pane(name="1", :label="renderData.workflowInfo")
-            el-form(ref="auditInfoForm", :rules="rules", :model="auditInfo", label-position="left")
+            el-form(ref="auditInfoForm", :rules="rules", :model="auditInfo", label-position="left").form-info
               el-form-item(prop="name", :label="renderData.workflowName")
                 b-input(:model.sync="auditInfo.name", :placeholder="renderData.pleaseInput")
               el-form-item(prop="_key", :label="renderData.pageId")
                 b-input(:model.sync="auditInfo._key", :placeholder="renderData.pleaseInput")
+              el-form-item(prop="listUrl", label="List Url")
+                b-input(:model.sync="auditInfo.listUrl", :placeholder="renderData.pleaseInput" :disabled="true")
+              el-form-item(prop="deleteUrl", label="Delete Url")
+                b-input(:model.sync="auditInfo.deleteUrl", :placeholder="renderData.pleaseInput" :disabled="true")
+              el-form-item(prop="detailUrl", label="Detail Url")
+                b-input(:model.sync="auditInfo.detailUrl", :placeholder="renderData.pleaseInput" :disabled="true")
+              el-form-item(prop="editUrl", label="Edit Url")
+                b-input(:model.sync="auditInfo.editUrl", :placeholder="renderData.pleaseInput" :disabled="true")
               //el-form-item(prop="description.label")
                 template(slot="label")
                   span.theme-color-C.inline-label(v-text="renderData.description", v-ellipsis-title="")
@@ -53,7 +61,6 @@
   import BUpload from 'components/BUpload'
   import BFormItem from 'components/BFormItem'
   import FormItemSet from './modules/FormItemSet'
-  import renderData from './lang.js'
 
   export default {
     name: 'form-set',
@@ -61,17 +68,16 @@
       var _this = this
       return {
         page: this.$router.currentRoute.query.page,
-        messageMap: {
-          number: renderData.numberMessage,
-          longText: renderData.longTextMessage,
-          required: renderData.requiredMessage
-        },
         allFieldsMap: {},
-        renderData: renderData,
+        renderData: service.getRenderDataSync({page: 'editor'}),
         formSet: {},
         currItem: {},
         auditInfo: {
           name: '',
+          'listUrl': 'http://localhost:3000/api/page/list?page=ceshi',
+          'detailUrl': 'http://localhost:3000/api/page/detail?page=ceshi',
+          'deleteUrl': 'http://localhost:3000/api/page/delete?page=ceshi',
+          'editUrl': 'http://localhost:3000/api/page/edit?page=ceshi',
           _key: '',
           description: {
             label: '',
@@ -80,46 +86,6 @@
         },
         activePane: '1',
         formItemList: [],
-        rules: {
-          name: [
-            {
-              required: true,
-              message: renderData.pleaseInput,
-              trigger: 'blur'
-            },
-            {
-              validator: validator.validate,
-              message: renderData.noAllowSpace,
-              test (val) {
-                return val.trim() === val
-              },
-              trigger: 'blur'
-            }
-          ],
-          _key: [
-            {
-              required: true,
-              message: renderData.pleaseInput,
-              trigger: 'blur'
-            }
-          ],
-          'description.label': [
-            {
-              regex: constants.text0To128Limit,
-              validator: validator.validate,
-              message: renderData.textLength128,
-              trigger: 'blur'
-            },
-            {
-              validator: validator.validate,
-              message: renderData.noAllowSpace,
-              test (val) {
-                return val.trim() === val
-              },
-              trigger: 'blur'
-            }
-          ]
-        },
         handler: {
           drop (event) {
             var el = event.target
@@ -160,11 +126,22 @@
             event.dataTransfer.setData('origin', event.target.getAttribute('origin'))
           }
         },
-        templateList: [
+        model: {}
+      }
+    },
+    created () {
+      var params = {page: 'editor'}
+      service.getRenderData(params).then(res => {
+        Object.assign(this.renderData, res)
+      })
+    },
+    computed: {
+      templateList () {
+        return [
           {
             type: 'input',
             icon: 'inputbox',
-            label: renderData.singleLineInputBox,
+            label: this.renderData.singleLineInputBox,
             list: true,
             detail: true,
             search: true,
@@ -173,7 +150,7 @@
           {
             type: 'textarea',
             icon: 'multilineinputbox',
-            label: renderData.multipleInputBox,
+            label: this.renderData.multipleInputBox,
             list: true,
             detail: true,
             search: true,
@@ -183,7 +160,7 @@
             type: 'select',
             icon: 'radio',
             dataSource: [],
-            label: renderData.radio,
+            label: this.renderData.radio,
             list: true,
             detail: true,
             search: true,
@@ -194,7 +171,7 @@
             icon: 'checkbox',
             multiple: true,
             dataSource: [],
-            label: renderData.checkbox,
+            label: this.renderData.checkbox,
             list: true,
             detail: true,
             search: true,
@@ -203,7 +180,7 @@
 //          {
 //            type: 'datetimerange',
 //            icon: 'date',
-//            label: renderData.dateRange,
+//            label: this.renderData.dateRange,
 //            format: 'yyyy-MM-dd mm:ss',
 //            hasInterval: false,
 //            list: true,
@@ -214,7 +191,7 @@
           {
             type: 'text',
             icon: 'explanatorytext',
-            label: renderData.caption,
+            label: this.renderData.caption,
             list: false,
             detail: true,
             search: false,
@@ -223,51 +200,122 @@
           // {
           //   type: 'upload',
           //   icon: 'file',
-          //   label: renderData.enclosure
+          //   label: this.renderData.enclosure
           // },
           // {
           //   type: 'cascadeSelect',
           //   icon: 'Group',
-          //   label: renderData.cascadeInquire,
+          //   label: this.renderData.cascadeInquire,
           //   follow: [],
           //   dataSource: ''
           // }
-        ],
-        regexObj: {
+        ]
+      },
+      regexObj () {
+        return {
           longText: {
             name: 'longText',
-            label: renderData.longTextRule,
+            label: this.renderData.longTextRule,
             rule: {
               name: 'longText',
               regex: constants.longTextRule,
               validator: validator.validate,
-              message: renderData.content1000More,
+              message: this.renderData.content1000More,
               trigger: 'blur'
             }
           },
           number: {
             name: 'number',
-            label: renderData.numberRule,
+            label: this.renderData.numberRule,
             rule: {
               name: 'number',
               regex: constants.numberRule,
               validator: validator.validate,
-              message: renderData.pleaseInput,
+              message: this.renderData.pleaseInput,
               trigger: 'blur'
             }
           },
           required: {
             name: 'required',
-            label: renderData.required,
+            label: this.renderData.required,
             rule: {
               name: 'required',
               required: true,
-              message: renderData.pleaseInput,
+              message: this.renderData.pleaseInput,
               trigger: 'blur'
             }
           }
-        },
-        model: {}
+        }
+      },
+      rules () {
+        return {
+          name: [
+            {
+              required: true,
+              message: this.renderData.pleaseInput,
+              trigger: 'blur'
+            },
+            {
+              validator: validator.validate,
+              message: this.renderData.noAllowSpace,
+              test (val) {
+                return val.trim() === val
+              },
+              trigger: 'blur'
+            }
+          ],
+          listUrl: [
+            {
+              required: true,
+              message: this.renderData.pleaseInput,
+              trigger: 'blur'
+            }
+          ],
+          deleteUrl: [
+            {
+              required: true,
+              message: this.renderData.pleaseInput,
+              trigger: 'blur'
+            }
+          ],
+          detailUrl: [
+            {
+              required: true,
+              message: this.renderData.pleaseInput,
+              trigger: 'blur'
+            }
+          ],
+          _key: [
+            {
+              required: true,
+              message: this.renderData.pleaseInput,
+              trigger: 'blur'
+            }
+          ],
+          editUrl: [
+            {
+              required: true,
+              message: this.renderData.pleaseInput,
+              trigger: 'blur'
+            }
+          ],
+          'description.label': [
+            {
+              regex: constants.text0To128Limit,
+              validator: validator.validate,
+              message: this.renderData.textLength128,
+              trigger: 'blur'
+            },
+            {
+              validator: validator.validate,
+              message: this.renderData.noAllowSpace,
+              test (val) {
+                return val.trim() === val
+              },
+              trigger: 'blur'
+            }
+          ]
+        }
       }
     },
     methods: {
@@ -281,7 +329,7 @@
               test (val) {
                 return !!val // 要求checkbox 必须为true
               },
-              message: this.messageMap[ruleItem],
+              message: this.renderData[ruleItem],
               trigger: ['blur', 'change']
             })
           } else if (ruleItem === 'required' && item.type === 'upload') {
@@ -291,7 +339,7 @@
               test (val) {
                 return !!val.url // 要求upload 必须为有url
               },
-              message: this.messageMap['required'],
+              message: this.renderData['required'],
               trigger: ['blur', 'change']
             })
           } else if (ruleItem.includes('api')) {
@@ -306,7 +354,7 @@
               validator: validator.validate
             })
           } else {
-            rule.message = this.messageMap[ruleItem]
+            rule.message = this.renderData[ruleItem]
             res.push(rule)
           }
 
@@ -527,6 +575,15 @@
         display: inline-block;
         vertical-align: top;
         flex-grow: 1;
+        .form-info {
+          .el-form-item__label {
+            width: 30%;
+          }
+          .el-form-item__content {
+            width: 65%;
+            display: inline-block;
+          }
+        }
         .icon-item {
           width: 36px;
           height: 36px;

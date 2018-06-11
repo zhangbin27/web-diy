@@ -4,11 +4,15 @@
 
 <script>
   import BFormItem from 'components/BFormItem'
+  import styleMixinLess from './styleMixin.txt'
+  import styleMixin from 'common/js/styleMixin'
 
   export default {
     name: 'b-pagination',
+    mixins: [styleMixin],
     data () {
       return {
+        styleMixinLess: styleMixinLess
       }
     },
     components: {
@@ -67,5 +71,27 @@
       padding-bottom: 4px !important;
     }
   }
+</style>
 
+<style lang="less" >
+  .theme-simple {
+    .b-pagination {
+    display: inline-block;
+    .el-pagination__total {
+      margin-right: 20px;
+    }
+    .el-pagination__total, .el-pagination__jump {
+      color: inherit;
+    }
+    .el-pagination__jump .el-pagination__editor {
+      margin: 0 6px;
+    }
+    .btn-prev {
+      margin-left: 20px !important;
+    }
+    input.el-input__inner {
+      padding-bottom: 4px !important;
+    }
+  }
+  }
 </style>

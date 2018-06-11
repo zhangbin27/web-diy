@@ -1,18 +1,17 @@
 <template lang="pug">
   .list
     .oper-container.clear-float
-      i.el-icon-plus(@click="add" :title="renderData.add")
-      i.el-icon-setting(@click="editConfig" :title="renderData.editConfig")
-    b-search-table(:optHandler='optHandler', :render-data="table", :url="page", ref="table")
+      i.el-icon-plus(@click="add", :title="renderData.add")
+      i.el-icon-setting(@click="editConfig", :title="renderData.editConfig")
+    b-search-table(:optHandler='optHandler', :render-data="renderData", :url="pageInfo.listUrl", ref="table" v-if="pageInfo.listUrl")
 
-    component(:is="visible.dialog", :currRow="currRow", :renderData="renderData", :visible="visible", :formItemList="formItemList", @refresh="refresh")
+    component(:is="visible.dialog", :currRow="currRow", :renderData="renderData", :visible="visible", :pageInfo="pageInfo", :formItemList="formItemList", @refresh="refresh")
 </template>
 
 <script>
   import service from './service'
   import BSearchTable from 'components/BSearchTable'
   import BButton from 'components/BButton'
-  import renderData from './lang'
   import edit from './modules/edit'
 
   export default {
@@ -22,7 +21,8 @@
       // z todo 可以做报表
       // z todo 可以兼容手机端
       return {
-        renderData: renderData,
+        pageInfo: {},
+        renderData: service.getRenderDataSync({page: 'list'}),
         formItemList: [],
         currRow: {},
         page: this.$router.currentRoute.query.page,
@@ -30,7 +30,6 @@
           dialog: null,
           page: null
         },
-        table: renderData,
         optHandler: {
           edit: this.edit,
           detail: this.detail,
@@ -38,7 +37,14 @@
         }
       }
     },
-    computed: {},
+    computed: {
+    },
+    created () {
+      var params = {page: 'list'}
+      service.getRenderData(params).then(res => {
+        Object.assign(this.renderData, res)
+      })
+    },
     methods: {
       editConfig () {
         this.$router.push({path: `/admin/editor?page=${this.page}`})
@@ -59,7 +65,7 @@
       },
       delete (row) {
         this.currRow = row
-        service.delete(row, this.page).then(res => {
+        service.delete(row, this.pageInfo.deleteUrl).then(res => {
           this.$message({type: 'success', message: this.renderData.operateSuccess})
           this.refresh()
         })
@@ -72,20 +78,16 @@
       'edit': edit,
       BSearchTable
     },
-    mounted () {
-      console.log('log', this.$router.page)
-      service.getTableConfig(this.page).then(res => {
-        this.table.searchObj.searchFields = res.searchFields
-        this.table.listObj.headerCols = res.headerCols
+    async mounted () {
+      console.log('log this.renderData', this.renderData)
+      await service.getTableConfig(this.page).then(res => {
+        this.renderData.searchFields = res.searchFields
+        this.renderData.headerCols = res.headerCols
         this.formItemList = res.formItemList
-        this.$refs['table'].search()
+        this.pageInfo = res.info
       })
     },
     watch: {
-      'visible.dialog' (newVal) {
-        console.log('visible.dialog change')
-        !newVal && this.$refs['table'].search()
-      },
       'page' () {
         console.log('currentRoute.dialog change')
       }

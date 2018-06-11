@@ -1,0 +1,76 @@
+{
+  "pages": [
+    {
+      "name": "用户信息管理",
+      "_key": "ceshi",
+      "listUrl": "http://localhost:3000/api/page/list?page=ceshi",
+      "detailUrl": "http://localhost:3000/api/page/detail?page=ceshi",
+      "deleteUrl": "http://localhost:3000/api/page/delete?page=ceshi",
+      "editUrl": "http://localhost:3000/api/page/edit?page=ceshi"
+    }
+  ],
+  "form": {
+    "ceshi": [
+      {
+        "label": "姓名",
+        "placeholder": "请输入",
+        "key": "name",
+        "rules": [
+          "required"
+        ],
+        "type": "input",
+        "icon": "inputbox",
+        "list": true,
+        "detail": true,
+        "search": true,
+        "edit": true,
+        "beDependentItems": [],
+        "value": ""
+      },
+      {
+        "label": "性别",
+        "placeholder": "请选择性别",
+        "key": "sex",
+        "rules": [
+          "required"
+        ],
+        "type": "select",
+        "icon": "radio",
+        "dataSource": [
+          {
+            "label": "男",
+            "key": "男"
+          },
+          {
+            "label": "女",
+            "key": "女"
+          }
+        ],
+        "list": true,
+        "detail": true,
+        "search": true,
+        "edit": true,
+        "beDependentItems": []
+      }
+    ]
+  },
+  "data": {
+    "ceshi": [
+      {
+        "name": "朋",
+        "_key": "_key1528678484523",
+        "sex": "男"
+      },
+      {
+        "name": "zhai",
+        "_key": "_key1528678475879",
+        "sex": "女"
+      },
+      {
+        "name": "test",
+        "_key": "_key1528633992253",
+        "sex": "女"
+      }
+    ]
+  }
+}

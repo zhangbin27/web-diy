@@ -35,7 +35,10 @@ const headers = {
 const queen = new Set()
 const basicUrl = 'http://localhost:3000'
 const func = (url, parameters, option) => {
-  url = basicUrl + url
+  if (!url.includes('http')) {
+    url = basicUrl + url
+  }
+  // url = basicUrl + url
   return new Promise((resolve, reject) => {
     let key = url + JSON.stringify(parameters)
     // 防止重复请求
@@ -78,13 +81,6 @@ const func = (url, parameters, option) => {
         eventHandler[data.type] && eventHandler[data.type](data)
       } catch (ex) {
         console.warn('ex', ex)
-      }
-      if (url === '/api/unique_validate') {
-        res = {
-          re: '200'
-        }
-        resolve(res)
-        return res
       }
       resolve(res)
       return res

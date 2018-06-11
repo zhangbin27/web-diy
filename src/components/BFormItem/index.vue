@@ -35,7 +35,7 @@
         opts: [],
         tmpModel: this.model || '',
         optionCls: {
-          'theme-bg-H theme-color-C theme-border-lightenD12 theme-bg-lightenD12-hover theme-bg-A-active theme-color-H-active': true
+          'theme-bg-H theme-color-C theme-bg-lightenD12-hover theme-bg-A-active theme-color-H-active': true
         }
       }
     },
@@ -148,5 +148,23 @@
         white-space: pre;
       }
     }
+  }
+</style>
+
+<style lang="less" scoped>
+  .theme-simple {
+    .b-form-item {
+    .el-date-editor--datetimerange.el-input {
+      width: 100%;
+    }
+    .el-select {
+      width: 100%;
+    }
+    .cascade-select {
+      .sub-info {
+        white-space: pre;
+      }
+    }
+  }
   }
 </style>
