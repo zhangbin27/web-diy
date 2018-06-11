@@ -2,10 +2,11 @@
   .list
     .oper-container.clear-float
       i.el-icon-plus(@click="add", :title="renderData.add")
+      i.icon.iconfont.icon-user_profile_icon_1(@click="viewGraph", :title="renderData.viewGraph")
       i.el-icon-setting(@click="editConfig", :title="renderData.editConfig")
     b-search-table(:optHandler='optHandler', :render-data="renderData", :url="pageInfo.listUrl", ref="table" v-if="pageInfo.listUrl")
 
-    component(:is="visible.dialog", :currRow="currRow", :renderData="renderData", :visible="visible", :pageInfo="pageInfo", :formItemList="formItemList", @refresh="refresh")
+    component(:is="visible.dialog", :currRow="currRow", :renderData="renderData", :visible="visible", :pageInfo="pageInfo", :formItemList="formItemList", @refresh="refresh", :table='table', @get-table-data='getTableData')
 </template>
 
 <script>
@@ -13,6 +14,7 @@
   import BSearchTable from 'components/BSearchTable'
   import BButton from 'components/BButton'
   import edit from './modules/edit'
+  import viewGraph from './modules/view-graph'
 
   export default {
     name: 'list',
@@ -24,6 +26,7 @@
         pageInfo: {},
         renderData: service.getRenderDataSync({page: 'list'}),
         formItemList: [],
+        table: [],
         currRow: {},
         page: this.$router.currentRoute.query.page,
         visible: {
@@ -52,8 +55,15 @@
       refresh () {
         this.$refs['table'].search()
       },
+      getTableData () {
+        console.log('getTableData')
+        this.table = this.$refs['table'].getTableData()
+      },
       add () {
         this.visible.dialog = 'add'
+      },
+      viewGraph () {
+        this.visible.dialog = 'view-graph'
       },
       edit (row) {
         this.currRow = row
@@ -73,6 +83,7 @@
     },
     components: {
       BButton,
+      'view-graph': viewGraph,
       'add': edit,
       'detail': edit,
       'edit': edit,

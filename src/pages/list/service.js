@@ -33,14 +33,14 @@ export default {
       return {
         info: data,
         formItemList: formItemList,
-        headerCols: formItemList.map(item => ({field: item.key, label: item.label, list: item.list})),
+        headerCols: formItemList.map(item => ({field: item.key, label: item.label, list: item.list, type: item.type})),
         searchFields: formItemList.map(item => ({
           search: item.search,
           field: item.key,
           dataSource: item.dataSource,
           type: item.type,
           label: item.label,
-          width: 3,
+          width: item.type === 'datetime' ? 6 : 3,
           placeholder: item.placeholder
         }))
       }

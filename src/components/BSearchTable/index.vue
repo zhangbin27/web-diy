@@ -65,6 +65,9 @@
       }
     },
     methods: {
+      getTableData () {
+        return this.$refs['table'].getTableData()
+      },
       selectionChange () {
         this.$emit('selection-change', ...arguments)
       },

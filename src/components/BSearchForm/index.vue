@@ -41,6 +41,9 @@
           if (field.type === 'textarea') {
             field.type = 'input'
           }
+          if (field.type === 'datetime') {
+            field.type = 'datetimerange'
+          }
           count += field.width
           if (count > 18 && pointer === -1) {
             pointer = idx

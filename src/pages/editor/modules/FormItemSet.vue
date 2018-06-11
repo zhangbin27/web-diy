@@ -19,8 +19,6 @@
         el-radio-group(v-model="item.format")
           b-radio(label="yyyy-MM-dd mm:ss") {{renderData.yMDTM}}
           b-radio(label="yyyy-MM-dd") {{renderData.yMD}}
-      //el-form-item(:label="renderData.verification", label-width="80px")
-        b-checkbox(:model.sync="item.hasInterval") {{renderData.enable}}
 
     template(v-if="item.type==='select' || item.type==='multiple-select'")
       el-form-item.clear-margin-b(:label="renderData.selectTerm", label-width="80px", :rules="[{required: true}]")

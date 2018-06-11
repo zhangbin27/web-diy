@@ -177,17 +177,15 @@
             search: true,
             edit: true
           },
-//          {
-//            type: 'datetimerange',
-//            icon: 'date',
-//            label: this.renderData.dateRange,
-//            format: 'yyyy-MM-dd mm:ss',
-//            hasInterval: false,
-//            list: true,
-//            detail: true,
-//            search: true,
-//            edit: true
-//          },
+          {
+            type: 'datetime',
+            icon: 'date',
+            label: this.renderData.dateTime,
+            list: true,
+            detail: true,
+            search: true,
+            edit: true
+          },
           {
             type: 'text',
             icon: 'explanatorytext',

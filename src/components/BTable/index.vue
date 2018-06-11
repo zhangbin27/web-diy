@@ -171,9 +171,9 @@
             class: ['table-cell'],
             directives: [{
               name: 'ellipsis-title',
-              value: _this.getLabel(row[column.property])
+              value: _this.getLabel(row[column.property], col, column)
             }]
-          }, _this.getLabel(row[column.property]))
+          }, _this.getLabel(row[column.property], col, column))
         }
       },
       sortChange (col) {
@@ -192,10 +192,11 @@
           this.currRow = row
         }
       },
-      getLabel (field) {
+      getLabel (field, col, column) {
         if (typeof field === 'object') {
           return field.label
-//          return field.label || '-'
+        } else if (col.type === 'datetime') {
+          return new Date(field).toDateString()
         } else {
           return field
         }
@@ -236,6 +237,9 @@
           this.pagination.total = res.total_num || 0
           this.loading = false
         })
+      },
+      getTableData () {
+        return this.tableData
       },
       selectionChange (selectedRows) {
         var unSelectedRows = this.tableData.filter(row => !selectedRows.find(item => item[this.valueKey] === row[this.valueKey]))
