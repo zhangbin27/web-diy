@@ -18,7 +18,7 @@ deleteFlag
 .el-table th, .el-table tr {
   background-color: @H !important;
 }
-.theme-simple {
+.theme-default {
   .el-table th{
     border-bottom: 1px solid @lightenD12!important;
   }
@@ -43,7 +43,7 @@ deleteFlag
 .expand-row:hover{
   background-color: @lightenD18 !important;
 }
-.theme-default {
+.theme-simple {
   .b-table .el-table__row td{
     border-bottom: 0!important;
   }
@@ -58,7 +58,7 @@ deleteFlag
 .el-table__empty-block .el-table__empty-text {
   color: @C !important;
 }
-.theme-simple {
+.theme-default {
   .el-table--fit {
     border-right: 1px solid;
     border-color: @lightenD12!important;

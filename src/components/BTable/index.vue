@@ -324,7 +324,7 @@
 </script>
 
 <style lang="less">
-  .theme-default {
+  .theme-simple {
     .header-icon {
       margin-left: 0;
     }
@@ -422,7 +422,7 @@
 </style>
 
 <style lang="less">
-  .theme-simple {
+  .theme-default {
     .header-icon {
       margin-left: 0;
     }
