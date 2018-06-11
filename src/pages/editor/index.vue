@@ -36,13 +36,13 @@
               el-form-item(prop="_key", :label="renderData.pageId")
                 b-input(:model.sync="auditInfo._key", :placeholder="renderData.pleaseInput")
               el-form-item(prop="listUrl", label="List Url")
-                b-input(:model.sync="auditInfo.listUrl", :placeholder="renderData.pleaseInput" :disabled="true")
+                b-input(:model.sync="auditInfo.listUrl", :placeholder="renderData.pleaseInput")
               el-form-item(prop="deleteUrl", label="Delete Url")
-                b-input(:model.sync="auditInfo.deleteUrl", :placeholder="renderData.pleaseInput" :disabled="true")
+                b-input(:model.sync="auditInfo.deleteUrl", :placeholder="renderData.pleaseInput")
               el-form-item(prop="detailUrl", label="Detail Url")
-                b-input(:model.sync="auditInfo.detailUrl", :placeholder="renderData.pleaseInput" :disabled="true")
+                b-input(:model.sync="auditInfo.detailUrl", :placeholder="renderData.pleaseInput")
               el-form-item(prop="editUrl", label="Edit Url")
-                b-input(:model.sync="auditInfo.editUrl", :placeholder="renderData.pleaseInput" :disabled="true")
+                b-input(:model.sync="auditInfo.editUrl", :placeholder="renderData.pleaseInput")
               //el-form-item(prop="description.label")
                 template(slot="label")
                   span.theme-color-C.inline-label(v-text="renderData.description", v-ellipsis-title="")
@@ -74,10 +74,10 @@
         currItem: {},
         auditInfo: {
           name: '',
-          'listUrl': 'http://localhost:3000/api/page/list?page=ceshi',
-          'detailUrl': 'http://localhost:3000/api/page/detail?page=ceshi',
-          'deleteUrl': 'http://localhost:3000/api/page/delete?page=ceshi',
-          'editUrl': 'http://localhost:3000/api/page/edit?page=ceshi',
+          'listUrl': '/api/page/list?page=ceshi',
+          'detailUrl': '/api/page/detail?page=ceshi',
+          'deleteUrl': '/api/page/delete?page=ceshi',
+          'editUrl': '/api/page/edit?page=ceshi',
           _key: '',
           description: {
             label: '',

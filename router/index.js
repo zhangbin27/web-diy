@@ -47,6 +47,7 @@ router.post('/config/set', function (req, res) {
   var target = cache['pages'].find(item => item._key === params._key)
   if (!target) {
     cache['pages'].push({
+      _key: params._key,
       name: params.name,
       listUrl: params.listUrl,
       deleteUrl: params.deleteUrl,
@@ -56,6 +57,7 @@ router.post('/config/set', function (req, res) {
     cache.data[params._key] = []
   } else {
     Object.assign(target, {
+      _key: params._key,
       name: params.name,
       listUrl: params.listUrl,
       detailUrl: params.detailUrl,
