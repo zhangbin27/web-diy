@@ -36,8 +36,8 @@
         } else {
           this.$router.push({path: '/admin/list?page=' + page})
           console.log('this.$router', this.$router.currentRoute)
-          if (this.$router.currentRoute.name !== 'editor') {
-//            location.reload()
+          if (this.$router.currentRoute.page !== 'editor') {
+            location.reload()
           }
         }
       },
