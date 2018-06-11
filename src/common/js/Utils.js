@@ -2,6 +2,7 @@ import _fetch from './fetch'
 import _constants from './constants'
 import _validator from './validator'
 import _API from './API'
+import _lang from './lang'
 
 var utils = {
   fetch: _fetch,
@@ -16,6 +17,7 @@ var utils = {
   }
 }
 
+export const lang = _lang
 export const constants = _constants
 export const validator = _validator
 export const fetch = _fetch

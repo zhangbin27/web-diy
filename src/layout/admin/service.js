@@ -1,38 +1,33 @@
-import { fetch, API } from 'common/js/Utils'
-import cookie from 'Cookies'
-
-var lang = {
-  editor: '编辑器',
-  save: '保存',
-  optionColor: '可选配色',
-  cancel: '取消',
-  color: '选择配色',
-  lang: '语言',
-  theme: '主题切换'
-}
+import { fetch, API, lang } from 'common/js/Utils'
 
 export default {
   getRenderDataSync (params) {
-    return lang
+    return lang[params.page]
   },
   getRenderData (params) {
-    return Promise.resolve(lang)
+    var text = JSON.parse(localStorage.getItem('text') || '{}')
+    return Promise.resolve(Object.assign(lang[params.page], text[params.page]))
   },
   getColors () {
-    return Promise.resolve(JSON.parse(cookie.get('colors') || '[]'))
+    return Promise.resolve(JSON.parse(localStorage.getItem('colors') || '[]'))
   },
   setColors (colors) {
-    cookie.set('colors', colors)
+    localStorage.setItem('colors', JSON.stringify(colors))
     return Promise.resolve({re: 200})
   },
   getPages () {
     return fetch(API.config_list, {})
   },
+  getText () {
+    return Promise.resolve(JSON.parse(localStorage.getItem('text')))
+  },
+  setText (data) {
+    localStorage.setItem('text', JSON.stringify(data))
+    return Promise.resolve({re: 200})
+  },
   getConfig () {
     return Promise.resolve({
-      colors: {},
-      lang: cookie.get('lang') || 'cn',
-      theme: 'default'
+      theme: localStorage.getItem('theme')
     })
   }
 }

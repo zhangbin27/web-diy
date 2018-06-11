@@ -1,15 +1,19 @@
 <template lang="pug">
   #app(:class="['theme-'+theme]")
-    router-view
+    router-view(@refresh="refresh")
 </template>
 
 <script>
-  // z todo 导出配置功能
   export default {
     name: 'App',
     data () {
       return {
         theme: window.localStorage.getItem('theme') || 'default'
+      }
+    },
+    methods: {
+      refresh () {
+        this.theme = window.localStorage.getItem('theme')
       }
     }
   }

@@ -30,19 +30,19 @@
       .right.theme-bg-I
         el-tabs(v-model='activePane')
           el-tab-pane(name="1", :label="renderData.workflowInfo")
-            el-form(ref="auditInfoForm", :rules="rules", :model="auditInfo", label-position="left")
+            el-form(ref="auditInfoForm", :rules="rules", :model="auditInfo", label-position="left").form-info
               el-form-item(prop="name", :label="renderData.workflowName")
                 b-input(:model.sync="auditInfo.name", :placeholder="renderData.pleaseInput")
               el-form-item(prop="_key", :label="renderData.pageId")
                 b-input(:model.sync="auditInfo._key", :placeholder="renderData.pleaseInput")
               el-form-item(prop="listUrl", label="List Url")
-                b-input(:model.sync="auditInfo.listUrl", :placeholder="renderData.pleaseInput")
+                b-input(:model.sync="auditInfo.listUrl", :placeholder="renderData.pleaseInput" :disabled="true")
               el-form-item(prop="deleteUrl", label="Delete Url")
-                b-input(:model.sync="auditInfo.deleteUrl", :placeholder="renderData.pleaseInput")
+                b-input(:model.sync="auditInfo.deleteUrl", :placeholder="renderData.pleaseInput" :disabled="true")
               el-form-item(prop="detailUrl", label="Detail Url")
-                b-input(:model.sync="auditInfo.detailUrl", :placeholder="renderData.pleaseInput")
+                b-input(:model.sync="auditInfo.detailUrl", :placeholder="renderData.pleaseInput" :disabled="true")
               el-form-item(prop="editUrl", label="Edit Url")
-                b-input(:model.sync="auditInfo.editUrl", :placeholder="renderData.pleaseInput")
+                b-input(:model.sync="auditInfo.editUrl", :placeholder="renderData.pleaseInput" :disabled="true")
               //el-form-item(prop="description.label")
                 template(slot="label")
                   span.theme-color-C.inline-label(v-text="renderData.description", v-ellipsis-title="")
@@ -69,15 +69,15 @@
       return {
         page: this.$router.currentRoute.query.page,
         allFieldsMap: {},
-        renderData: service.getRenderDataSync(),
+        renderData: service.getRenderDataSync({page: 'editor'}),
         formSet: {},
         currItem: {},
         auditInfo: {
           name: '',
-          listUrl: '',
-          detailUrl: '',
-          deleteUrl: '',
-          editUrl: '',
+          'listUrl': 'http://localhost:3000/api/page/list?page=ceshi',
+          'detailUrl': 'http://localhost:3000/api/page/detail?page=ceshi',
+          'deleteUrl': 'http://localhost:3000/api/page/delete?page=ceshi',
+          'editUrl': 'http://localhost:3000/api/page/edit?page=ceshi',
           _key: '',
           description: {
             label: '',
@@ -575,6 +575,15 @@
         display: inline-block;
         vertical-align: top;
         flex-grow: 1;
+        .form-info {
+          .el-form-item__label {
+            width: 30%;
+          }
+          .el-form-item__content {
+            width: 65%;
+            display: inline-block;
+          }
+        }
         .icon-item {
           width: 36px;
           height: 36px;

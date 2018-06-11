@@ -1,6 +1,6 @@
 <template lang="pug">
   .b-table(v-cloak='')
-    el-table(:data="tableData" style="width:100%", @row-click='handleRowClick', v-loading="loading", @sort-change="sortChange", :row-class-name="getRowClass", ref="bTable", @selection-change="selectionChange").theme-border-lightenD12
+    el-table(:data="tableData" style="width:100%", @row-click='handleRowClick', v-loading="loading", @sort-change="sortChange", :row-class-name="getRowClass", ref="bTable", @selection-change="selectionChange")
       el-table-column(type="expand" v-if="tableType.expand && computedHeaderCols.length!==0")
         template(slot-scope="scope")
           slot(name="expand", :computedHeaderCols="computedHeaderCols", :otherCols="otherCols", :computedOpts="computedOpts", :row="scope.row", :operateOpts="renderData.operateOpts")
@@ -9,7 +9,7 @@
 
       el-table-column.el-table-scroll(:label="renderData.more" v-if="otherCols.length")
         template(slot-scope="scope")
-          el-popover.theme-border-lightenD12.theme-color-H(trigger="click" placement="bottom" ref="popoverMore")
+          el-popover.theme-color-H(trigger="click" placement="bottom" ref="popoverMore")
             .el-popover-item-intable(v-for="(col, idx) in otherCols", :key="idx")
               template(v-if="!col.isGroup")
                 .left(v-text='col.label' v-ellipsis-title="")
@@ -27,7 +27,7 @@
           el-dropdown.theme-color-lightenC32.theme-color-lightenA10-hover.theme-color-darkenA10-active(@command="handleCommand" trigger='click', v-if="computedOpts.length > 1")
             span.el-dropdown-link
               b-icon.pointer(iconName="operation")
-            el-dropdown-menu.ipt-class.theme-bg-H.theme-border-lightenD12(slot="dropdown")
+            el-dropdown-menu.ipt-class.theme-bg-H(slot="dropdown")
               el-dropdown-item.theme-bg-lightenD12-hover.theme-color-C.theme-color-C-hover(:command='op.auth' v-for="op in computedOpts" v-text="op.label", :key='op.auth', :disabled="op.authStatus==='disabled'")
 
     .batch-operate(v-if="renderData.multipleSelect")
@@ -42,11 +42,15 @@
   import BIcon from 'components/BIcon'
   import BTooltip from 'components/BTooltip'
   import BPagination from 'components/BPagination'
+  import styleMixinLess from './styleMixin.txt'
+  import styleMixin from 'common/js/styleMixin'
 
   export default {
     name: 'b-table',
+    mixins: [styleMixin],
     data () {
       return {
+        styleMixinLess: styleMixinLess,
         loading: false,
         currRow: {},
         tableData: []
@@ -320,97 +324,99 @@
 </script>
 
 <style lang="less">
-  .header-icon {
-    margin-left: 0;
-  }
+  .theme-default {
+    .header-icon {
+      margin-left: 0;
+    }
 
-  .el-table-scroll {
-    overflow: auto;
-  }
+    .el-table-scroll {
+      overflow: auto;
+    }
 
-  .el-popover-item-intable {
-    .title {
-      margin-top: 10px;
-    }
-    line-height: 26px;
-    .left {
-      width: 45%;
-      display: inline-block;
-    }
-    .right {
-      width: 50%;
-      padding-left: 10px;
-      display: inline-block;
-    }
-    span:nth-child(2) {
-      margin-left: 10px;
-    }
-  }
-
-  .b-table {
-    .el-table .table-cell {
-      width: 100%;
-      display: inline-block;
-    }
-    .table {
-      margin-top: 16px;
-    }
-    .batch-operate {
-      line-height: 36px;
-    }
-    .pagination {
-      float: right;
-      .el-pager li {
-        min-width: 21px;
+    .el-popover-item-intable {
+      .title {
+        margin-top: 10px;
+      }
+      line-height: 26px;
+      .left {
+        width: 45%;
+        display: inline-block;
+      }
+      .right {
+        width: 50%;
+        padding-left: 10px;
+        display: inline-block;
+      }
+      span:nth-child(2) {
+        margin-left: 10px;
       }
     }
-  }
 
-  .header-span {
-    max-width: 80%;
-    vertical-align: top;
-    display: inline-block;
-  }
+    .b-table {
+      .el-table .table-cell {
+        width: 100%;
+        display: inline-block;
+      }
+      .table {
+        margin-top: 16px;
+      }
+      .batch-operate {
+        line-height: 36px;
+      }
+      .pagination {
+        float: right;
+        .el-pager li {
+          min-width: 21px;
+        }
+      }
+    }
 
-  .ipt-class {
-    text-align: center !important;
-  }
+    .header-span {
+      max-width: 80%;
+      vertical-align: top;
+      display: inline-block;
+    }
 
-  .tabPopover1 {
-    width: 40% !important;
-    position: relative;
-    top: 5px;
-    left: 5px;
-  }
+    .ipt-class {
+      text-align: center !important;
+    }
 
-  .b-table {
-    .table-el-tooltip {
+    .tabPopover1 {
+      width: 40% !important;
       position: relative;
       top: 5px;
       left: 5px;
     }
-    .hide-expand {
-      .el-table__expand-icon {
-        display: none;
+
+    .b-table {
+      .table-el-tooltip {
+        position: relative;
+        top: 5px;
+        left: 5px;
       }
-    }
-    .el-table .sort-caret.ascending {
-      top: 0 !important;
-    }
-    .el-table .sort-caret.descending {
-      bottom: 0 !important;
-    }
-    .img-icon-size {
-      font-size: 22px;
-    }
-    .el-table__expanded-cell {
-      padding: 0 !important;
-    }
-    .caret-wrapper {
-      height: 23px !important;
-    }
-    .el-table td, .el-table th {
-      padding: 8.5px 0 !important;
+      .hide-expand {
+        .el-table__expand-icon {
+          display: none;
+        }
+      }
+      .el-table .sort-caret.ascending {
+        top: 0 !important;
+      }
+      .el-table .sort-caret.descending {
+        bottom: 0 !important;
+      }
+      .img-icon-size {
+        font-size: 22px;
+      }
+      .el-table__expanded-cell {
+        padding: 0 !important;
+      }
+      .caret-wrapper {
+        height: 23px !important;
+      }
+      .el-table td, .el-table th {
+        padding: 8.5px 0 !important;
+      }
     }
   }
 </style>
@@ -508,6 +514,16 @@
       }
       .el-table td, .el-table th {
         padding: 8.5px 0 !important;
+        border-right: 1px solid #ebeef5;
+        border-bottom: 1px solid #ebeef5;
+      }
+      .el-table {
+        border: 1px solid #ebeef5;
+        border-right: none;
+        border-bottom: none;
+        .el-table__body tr:nth-child(odd) td {
+          background-color: #fafafa;
+        }
       }
     }
   }

@@ -1,9 +1,11 @@
 <template lang="pug">
   b-dialog(:show='true', :title="renderData.configText", :show-close="true", :before-close="close" width="40%").edit-text
-    el-form(:model="data", :rules="cRules" ref="form").clear-float
-      el-col(:span="12"  v-for="(key, idx) in Object.keys(data)", :key='idx')
-        el-form-item(:label="key", :prop="key")
-          b-input(:model.sync="data[key]")
+    el-form(ref="form").clear-float
+      el-form-item(:label="renderData.module")
+        b-select(:model.sync="key")
+          el-option(v-for="keyOp in Object.keys(data)" :key="keyOp" :label="keyOp" :value="keyOp")
+      el-form-item(v-for="subKey in Object.keys(module)", :label="subKey" :key="key+subKey" v-if="typeof module[subKey] === 'string'")
+        b-input(:model.sync="module[subKey]")
     template(slot="footer")
       b-button(@click="close") {{renderData.cancel}}
       b-button(@click="save", type="primary") {{renderData.save}}
@@ -14,12 +16,15 @@
   import BButton from 'components/BButton'
   import BDialog from 'components/BDialog'
   import BSelect from 'components/BSelect'
+  import BInput from 'components/BInput'
+  import text from 'common/js/lang'
 
   export default {
     name: 'edit-text',
     data () {
       return {
-        data: {}
+        key: '',
+        data: text
       }
     },
     props: {
@@ -28,33 +33,31 @@
       }
     },
     computed: {
-      cRules () {
-        return {}
+      module () {
+        return this.data[this.key] || {}
       }
     },
     methods: {
       close () {
         this.$emit('close')
       },
+      getText () {
+        service.getText().then(res => {
+          Object.assign(this.data, res)
+        })
+      },
       save () {
-        this.$refs['form'].validate(res => {
-          if (res) {
-            this.colors.forEach(color => {
-              color.value = this.tmpModel[color.key]
-            })
-            console.log('colors', this.colors)
-            service.setColors(this.colors).then(res => {
-              window.changeColor(this.colors)
-              this.close()
-            })
-          }
+        service.setText(this.data).then(() => {
+          this.close()
+          window.location.reload()
         })
       }
     },
     mounted () {
-//      this.getText()
+      this.getText()
     },
     components: {
+      BInput,
       BSelect,
       BDialog,
       BButton
@@ -64,5 +67,12 @@
 
 <style lang="less">
   .edit-text {
+    .el-form-item .el-form-item__label {
+      width: 30%;
+    }
+    .el-form-item__content {
+      width: 70%;
+      display: inline-block;
+    }
   }
 </style>

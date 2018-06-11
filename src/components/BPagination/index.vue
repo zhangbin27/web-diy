@@ -4,11 +4,15 @@
 
 <script>
   import BFormItem from 'components/BFormItem'
+  import styleMixinLess from './styleMixin.txt'
+  import styleMixin from 'common/js/styleMixin'
 
   export default {
     name: 'b-pagination',
+    mixins: [styleMixin],
     data () {
       return {
+        styleMixinLess: styleMixinLess
       }
     },
     components: {

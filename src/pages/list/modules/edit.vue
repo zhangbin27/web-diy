@@ -13,18 +13,19 @@
   import BButton from 'components/BButton'
   import BDialog from 'components/BDialog'
   import service from '../service'
-  import renderData from '../lang'
 
   export default {
     name: 'edit',
     data () {
       return {
         page: this.$router.currentRoute.query.page,
-        renderData: renderData,
         tempForm: {}
       }
     },
     props: {
+      renderData: {
+        required: true
+      },
       pageInfo: {
         required: true
       },

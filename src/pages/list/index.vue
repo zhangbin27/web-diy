@@ -22,7 +22,7 @@
       // z todo 可以兼容手机端
       return {
         pageInfo: {},
-        renderData: service.getRenderDataSync(),
+        renderData: service.getRenderDataSync({page: 'list'}),
         formItemList: [],
         currRow: {},
         page: this.$router.currentRoute.query.page,

@@ -1,34 +1,25 @@
 <template lang="pug">
   .admin-header.clear-float
-    el-dropdown.theme(@command="themeChange")
-      span.el-dropdown-link
-        | {{renderData.theme}}
-      el-dropdown-menu(slot="dropdown")
-        el-dropdown-item(command='default')  default
-        el-dropdown-item(command="simple")  simple
-    el-dropdown.lang(@command="langChange")
-      span.el-dropdown-link
-        |  {{renderData.lang}}
-      el-dropdown-menu(slot="dropdown")
-        el-dropdown-item(command="cn") 中文简体
-        el-dropdown-item(command='en') English
+    .theme
+      span(@click="themeChange('default')" :class="defaultCls")  default
+      span &nbsp;/&nbsp;
+      span(@click="themeChange('simple')" :class="simpleCls")   simple
     span.colors.theme-color-A(@click="chooseColor")  {{renderData.color}}
-    component(:is="visible.dialog", :renderData="renderData" v-if="showColorModal", @close="closeModal")
+    span.text.theme-color-A(@click="configText")  {{renderData.configText}}
+    component(:is="visible.dialog", :renderData="renderData", @close="closeModal", :colors="colors")
 </template>
 
 <script>
   import service from '../service'
   import editColor from './edit-color'
   import editText from './edit-text'
-  import cookie from 'Cookies'
 
   export default {
     name: 'admin-header',
     data () {
       return {
+        colors: [],
         visible: {dialog: null},
-        lang: 'en',
-        showColorModal: false,
         theme: 'default'
       }
     },
@@ -39,10 +30,29 @@
       }
     },
     components: {
-      editColor,
-      editText
+      'edit-color': editColor,
+      'edit-text': editText
+    },
+    computed: {
+      simpleCls () {
+        return {
+          'theme-color-A': this.theme === 'simple',
+          'theme-color-D': this.theme !== 'simple'
+        }
+      },
+      defaultCls () {
+        return {
+          'theme-color-A': this.theme === 'default',
+          'theme-color-D': this.theme !== 'default'
+        }
+      }
     },
     methods: {
+      getColors () {
+        service.getColors().then(colors => {
+          this.colors = colors
+        })
+      },
       closeModal () {
         this.visible.dialog = null
       },
@@ -53,22 +63,22 @@
         this.visible.dialog = 'edit-color'
       },
       themeChange (theme) {
+        if (this.theme === theme) {
+          return
+        }
         this.theme = theme
-      },
-      langChange (lang) {
-        this.lang = lang
-        cookie.set('lang', lang)
-        window.location.reload()
+        localStorage.setItem('theme', theme)
+        this.$emit('refresh')
       },
       getConfig () {
         service.getConfig().then(res => {
-          this.lang = res.lang
           this.theme = res.theme
         })
       }
     },
     mounted () {
       this.getConfig()
+      this.getColors()
     }
   }
 </script>
@@ -77,7 +87,7 @@
   .admin-header {
     height: 40px;
     line-height: 40px;
-    .colors, .lang, .theme {
+    .colors, .text, .theme {
       cursor: pointer;
       float: right;
       margin-left: 20px;

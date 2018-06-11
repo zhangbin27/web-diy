@@ -35,7 +35,7 @@
         opts: [],
         tmpModel: this.model || '',
         optionCls: {
-          'theme-bg-H theme-color-C theme-border-lightenD12 theme-bg-lightenD12-hover theme-bg-A-active theme-color-H-active': true
+          'theme-bg-H theme-color-C theme-bg-lightenD12-hover theme-bg-A-active theme-color-H-active': true
         }
       }
     },

@@ -97,7 +97,6 @@
             'value': '#6ACAE7'
           }]
         ],
-        colors: [],
         cRules: {
           ...Object.keys(model).reduce((res, key) => {
             res[key] = [{
@@ -114,6 +113,9 @@
     props: {
       renderData: {
         required: true
+      },
+      colors: {
+        required: true
       }
     },
     watch: {
@@ -124,12 +126,6 @@
       }
     },
     methods: {
-      getColors () {
-        service.getColors().then(colors => {
-          this.colors = colors
-          window.changeColor(colors)
-        })
-      },
       chooseColor (idx) {
         this.colors = this.colorList[idx]
       },
@@ -144,7 +140,7 @@
             })
             console.log('colors', this.colors)
             service.setColors(this.colors).then(res => {
-              window.changeColor(this.colors)
+              window.changeColor.forEach(fn => fn(this.colors))
               this.close()
             })
           }
@@ -152,7 +148,7 @@
       }
     },
     mounted () {
-      this.getColors()
+
     },
     components: {
       BSelect,

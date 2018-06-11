@@ -2,8 +2,8 @@
   .admin-layout
     .container.clear-float
       admin-nav.left(:renderData="renderData")
-      .content
-        admin-header(:renderData="renderData")
+      .content.theme-bg-H
+        admin-header(:renderData="renderData" @refresh="refresh")
         router-view
 </template>
 
@@ -24,6 +24,11 @@
       service.getRenderData(params).then(res => {
         Object.assign(this.renderData, res)
       })
+    },
+    methods: {
+      refresh () {
+        this.$emit('refresh')
+      }
     },
     components: {
       adminNav,

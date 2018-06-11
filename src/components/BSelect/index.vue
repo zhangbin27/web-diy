@@ -4,10 +4,15 @@
 </template>
 
 <script>
+  import styleMixinLess from './styleMixin.txt'
+  import styleMixin from 'common/js/styleMixin'
+
   export default {
     name: 'b-select',
+    mixins: [styleMixin],
     data () {
       return {
+        styleMixinLess: styleMixinLess,
         tmpModel: this.model,
         selectCls: {
           'theme-color-C theme-border-lightenD12 theme-border-lightenD12-hover theme-border-A-active theme-color-H-active': true

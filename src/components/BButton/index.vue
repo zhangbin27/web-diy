@@ -58,5 +58,8 @@
     .el-button:hover {
       border-color: #71DAF9;
     }
+    .b-form-item .b-button {
+      border-radius: 20px;
+    }
   }
 </style>
