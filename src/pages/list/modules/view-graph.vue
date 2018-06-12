@@ -62,26 +62,80 @@
     methods: {
       generateGraph () {
         this.chart = echarts.init(window.graph)
-        console.log('xAxis, yAxis', this.table.map(row => row[this.detail.xAxis]), this.table.map(row => row[this.detail.yAxis]))
+        var cols = this.renderData.headerCols
+        var table = JSON.parse(JSON.stringify(this.table))
+        table.forEach((row, rowIdx) => {
+          for (var col of cols) {
+            if (col.type === 'datetime') {
+              var d = new Date(row[col.field])
+              row[col.field] = d.getFullYear() + d.getMonth() + d.getDay() + ''
+            }
+          }
+        })
+        var map = new Map()
+        var {xAxis, yAxis} = this.detail
+        var [xset, yset] = [new Set(table.map(row => row[xAxis])), new Set(table.map(row => row[yAxis]))]
+        var [xArr, yArr] = [Array.from(xset), Array.from(yset)]
+        table.forEach((row, rowIdx) => {
+          var [xVal, yVal] = [row[xAxis], row[yAxis]]
+          var [xValIdx, yValIdx] = [xArr.indexOf(xVal), yArr.indexOf(yVal)]
+          var key = xValIdx + ',' + yValIdx
+          var count = map.get(key) || 0
+          map.set(key, ++count)
+        })
+        var data = []
+        for (var [key, count] of map.entries()) {
+          var [x, y] = key.split(',')
+          data.push([parseInt(x), parseInt(y), count])
+        }
+        console.log('xArr,yArr,data', xArr, yArr, data, table)
         var option = {
           title: {
-            text: `${this.detail.xAxis} / ${this.detail.yAxis}`
+            text: `${xAxis} / ${yAxis}`
           },
           tooltip: {},
           legend: {
-            data: [this.detail.yAxis]
+            data: [yAxis]
+          },
+          grid: {
+            left: 2,
+            bottom: 10,
+            right: 10,
+            containLabel: true
           },
           xAxis: {
-            data: this.table.map(row => row[this.detail.xAxis])
-          },
-          yAxis: {},
-          series: [
-            {
-              name: this.detail.yAxis,
-              type: 'bar',
-              data: this.table.map(row => row[this.detail.yAxis])
+            type: 'category',
+            data: xArr,
+            boundaryGap: false,
+            splitLine: {
+              show: true,
+              lineStyle: {
+                color: '#999',
+                type: 'dashed'
+              }
+            },
+            axisLine: {
+              show: false
             }
-          ]
+          },
+          yAxis: {
+            type: 'category',
+            data: yArr,
+            axisLine: {
+              show: false
+            }
+          },
+          series: [{
+            name: yAxis,
+            type: 'scatter',
+            symbolSize: function (val) {
+              return val[2] * 5
+            },
+            data: data,
+            animationDelay: function (idx) {
+              return idx * 5
+            }
+          }]
         }
         this.chart.setOption(option)
       },
