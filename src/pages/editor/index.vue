@@ -504,7 +504,7 @@
           line-height: 36px;
           height: 36px;
           padding: 0px 10px;
-          margin-bottom: 8px;
+          margin-bottom: 20px;
         }
         .template-icon {
           margin-right: 5px;

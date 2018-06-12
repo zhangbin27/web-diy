@@ -1,5 +1,5 @@
 <template lang="pug">
-  el-menu.admin-nav(:default-active="activePage", @open="handleOpen", @close="handleClose")
+  el-menu.admin-nav(:default-active="activePage", @open="handleOpen", @close="handleClose" :mode="mode")
     el-menu-item(:index='page._key' v-for="page in pages", @click="toPage(page._key)", :key="page._key")
       span(slot='title') {{page.name}}
 </template>
@@ -19,6 +19,16 @@
       renderData: {
         required: true,
         type: Object
+      },
+      layout: {
+        required: true,
+        type: String,
+        default: 'horizontal'
+      }
+    },
+    computed: {
+      mode () {
+        return this.layout === 'vertical' ? 'horizontal' : 'vertical'
       }
     },
     methods: {

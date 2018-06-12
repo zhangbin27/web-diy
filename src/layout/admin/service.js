@@ -11,6 +11,9 @@ export default {
   getColors () {
     return Promise.resolve(JSON.parse(localStorage.getItem('colors') || '[]'))
   },
+  getLayout () {
+    return Promise.resolve(localStorage.getItem('layout') || 'horizontal')
+  },
   setColors (colors) {
     localStorage.setItem('colors', JSON.stringify(colors))
     return Promise.resolve({re: 200})
@@ -27,6 +30,7 @@ export default {
   },
   getConfig () {
     return Promise.resolve({
+      layout: localStorage.getItem('layout'),
       theme: localStorage.getItem('theme')
     })
   }

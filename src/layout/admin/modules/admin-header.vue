@@ -4,6 +4,10 @@
       span(@click="themeChange('default')" :class="defaultCls")  default
       span &nbsp;/&nbsp;
       span(@click="themeChange('simple')" :class="simpleCls")   simple
+    .layout
+      span(@click="layoutChange('vertical')" :class="verticalCls")  vertical
+      span &nbsp;/&nbsp;
+      span(@click="layoutChange('horizontal')" :class="horizontalCls")   horizontal
     span.colors.theme-color-A(@click="chooseColor")  {{renderData.color}}
     span.text.theme-color-A(@click="configText")  {{renderData.configText}}
     component(:is="visible.dialog", :renderData="renderData", @close="closeModal", :colors="colors")
@@ -20,7 +24,8 @@
       return {
         colors: [],
         visible: {dialog: null},
-        theme: 'default'
+        theme: 'default',
+        layout: 'horizontal'
       }
     },
     props: {
@@ -44,6 +49,18 @@
         return {
           'theme-color-A': this.theme === 'default',
           'theme-color-D': this.theme !== 'default'
+        }
+      },
+      horizontalCls () {
+        return {
+          'theme-color-A': this.layout === 'horizontal',
+          'theme-color-D': this.layout !== 'horizontal'
+        }
+      },
+      verticalCls () {
+        return {
+          'theme-color-A': this.layout === 'vertical',
+          'theme-color-D': this.layout !== 'vertical'
         }
       }
     },
@@ -70,9 +87,18 @@
         localStorage.setItem('theme', theme)
         this.$emit('refresh')
       },
+      layoutChange (layout) {
+        if (this.layout === layout) {
+          return
+        }
+        this.layout = layout
+        localStorage.setItem('layout', layout)
+        this.$emit('refresh')
+      },
       getConfig () {
         service.getConfig().then(res => {
           this.theme = res.theme
+          this.layout = res.layout
         })
       }
     },
@@ -87,7 +113,7 @@
   .admin-header {
     height: 40px;
     line-height: 40px;
-    .colors, .text, .theme {
+    .colors, .text, .theme, .layout {
       cursor: pointer;
       float: right;
       margin-left: 20px;

@@ -1,7 +1,7 @@
 <template lang="pug">
-  .admin-layout
+  .layout(:class="[layout]")
     .container.clear-float
-      admin-nav.left(:renderData="renderData")
+      admin-nav.left(:renderData="renderData", :layout="layout")
       .content.theme-bg-H
         admin-header(:renderData="renderData" @refresh="refresh")
         router-view
@@ -16,6 +16,7 @@
     name: 'admin-layout',
     data () {
       return {
+        layout: 'horizontal',
         renderData: service.getRenderDataSync({page: 'admin'})
       }
     },
@@ -28,7 +29,16 @@
     methods: {
       refresh () {
         this.$emit('refresh')
+        this.layout = window.localStorage.getItem('layout')
+      },
+      getLayout () {
+        service.getLayout().then(res => {
+          this.layout = res
+        })
       }
+    },
+    mounted () {
+      this.getLayout()
     },
     components: {
       adminNav,
@@ -46,19 +56,15 @@
     }
   }
 
-  .admin-layout {
+  .layout.vertical {
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    .container {
-      flex-grow: 1;
-      display: flex;
+    > .container {
       height: 100%;
-      .left {
-        width: 200px;
-        padding: 50px 0;
+      display: flex;
+      flex-direction: column;
+      > .top {
       }
-      .content {
+      > .content {
         padding: 20px;
         position: relative;
         flex-grow: 1;
@@ -68,18 +74,24 @@
     }
   }
 
-  @media screen and  (min-width: 1250px) {
-    .admin-layout {
-      .container {
+  .layout.horizontal {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    > .container {
+      flex-grow: 1;
+      display: flex;
+      height: 100%;
+      > .left {
+        width: 200px;
+        padding: 50px 0;
       }
-    }
-  }
-
-  @media screen and (max-width: 1250px) {
-    .admin-layout {
-      .container {
-        .content {
-        }
+      > .content {
+        padding: 20px;
+        position: relative;
+        flex-grow: 1;
+        overflow-y: auto;
+        background-size: 0 0;
       }
     }
   }
