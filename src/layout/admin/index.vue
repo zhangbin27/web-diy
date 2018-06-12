@@ -1,7 +1,7 @@
 <template lang="pug">
   .layout(:class="[layout]")
     .container.clear-float
-      admin-nav.left(:renderData="renderData", :layout="layout")
+      admin-nav(:renderData="renderData", :layout="layout")
       .content.theme-bg-H
         admin-header(:renderData="renderData" @refresh="refresh")
         router-view
@@ -62,7 +62,8 @@
       height: 100%;
       display: flex;
       flex-direction: column;
-      > .top {
+      .admin-nav {
+        padding: 0 20px;
       }
       > .content {
         padding: 20px;
@@ -82,7 +83,7 @@
       flex-grow: 1;
       display: flex;
       height: 100%;
-      > .left {
+      > .admin-nav {
         width: 200px;
         padding: 50px 0;
       }
