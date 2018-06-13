@@ -10,13 +10,15 @@
   export default {
     name: 'admin-nav',
     data () {
+      var {path, query} = this.$router.currentRoute
+      var page = ['/admin/editor', '/admin/audit'].includes(path) ? path.slice(path.lastIndexOf('/') + 1) : query.page
       return {
         pages: [],
-        activePage: ''
+        activePage: page
       }
     },
     props: {
-      renderData: {
+      rdata: {
         required: true,
         type: Object
       },
@@ -35,19 +37,19 @@
       getPageList () {
         service.getPages().then(res => {
           var pages = res.data
-          pages.unshift({name: this.renderData.editor, _key: 'editor'})
+          pages.unshift({name: this.rdata.audit, _key: 'audit'})
+          pages.unshift({name: this.rdata.editor, _key: 'editor'})
           this.pages = pages
-          this.activePage = pages[0]._key
         })
       },
       toPage (page) {
-        if (page === 'editor') {
-          this.$router.push({path: '/admin/editor'})
+        if (page === 'editor' || page === 'audit') {
+          this.$router.push({path: '/admin/' + page})
         } else {
+          var pre = this.$router.currentRoute.name
           this.$router.push({path: '/admin/list?page=' + page})
-          console.log('this.$router', this.$router.currentRoute)
-          if (this.$router.currentRoute.page !== 'editor') {
-            location.reload()
+          if (window._listPage && pre === 'list') {
+            window._listPage.reload()
           }
         }
       },

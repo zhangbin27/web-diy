@@ -36,7 +36,6 @@
     methods: {
       uploadSuccess (res, file) {
         this.fileList = [file]
-        console.log('uploadSuccess file', file)
         this.$emit('input', {url: file.response.filename, name: file.name, changed: true})
       },
       handleRemove (file, fileList) {
@@ -44,10 +43,6 @@
         this.$emit('input', {})
       },
       beforeUpload (file) {
-        console.log('file上傳之前')
-        console.log(file)
-        console.log('传入的配置')
-        console.log(this.uploadFileConfig)
         var result = false
         for (let i = 0; i < this.uploadFileConfig.type.length; i++) {
           if (file.type.indexOf(this.uploadFileConfig.type[i]) > -1) {

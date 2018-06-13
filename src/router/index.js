@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import list from '@/pages/list'
 import editor from '@/pages/editor'
+import audit from '@/pages/audit'
 import adminLayout from '@/layout/admin'
 
 Vue.use(Router)
@@ -22,17 +23,22 @@ export default new Router({
           path: 'list',
           component: list,
           name: 'list'
+        },
+        {
+          path: 'audit',
+          component: audit,
+          name: 'audit'
         }
       ]
     },
     {
       path: '/',
-      name: 'default',
+      name: '',
       component: adminLayout,
       children: [
         {
           path: '/',
-          name: 'list',
+          name: 'default',
           component: editor
         }
       ]

@@ -15,7 +15,6 @@
       }
     },
     mounted () {
-      console.log('this.model', this.model, this.model !== 'undefined', this.indeterminate)
     },
     props: {
       value: {
@@ -44,18 +43,15 @@
     },
     watch: {
       indeterminate () {
-        console.log('indeterminate change')
       }
     },
     methods: {
       changeHandler: function (newVal) {
-        console.log('bcheckbox', ...arguments, this.model)
         if (this.modelExist) {
           this.$emit('update:model', newVal)
         }
         this.$emit('change')
         setTimeout(function () {
-          console.log('settimeout', this.model)
         }, 1000)
       }
     }

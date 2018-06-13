@@ -1,7 +1,7 @@
 <template lang="pug">
-  el-form.custom-form(:model="model", ref="tempForm", labelPosition='left')
+  el-form.custom-form.c-form(:model="model", ref="tempForm", labelPosition='left')
     el-form-item(:label-width="labelWidth", :prop="item.key", :rules="getRules(item)" v-for="(item, idx) in cFormItemList", :key="idx", :label="item.type=='clause'?'':item.label" v-if="show(item)")
-      b-form-item(:model.sync='model[item.key]', :item='item', @change="itemChange", :disabled="disabled", :renderData="renderData")
+      b-form-item(:model.sync='model[item.key]', :item='item', @change="itemChange", :disabled="disabled", :rdata="rdata")
 </template>
 
 <script>
@@ -15,9 +15,9 @@
       return {
         allFieldsMap: {},
         messageMap: {
-          number: this.renderData.numberMessage,
-          longText: this.renderData.longTextMessage,
-          required: this.renderData.requiredMessage
+          number: this.rdata.numberMessage,
+          longText: this.rdata.longTextMessage,
+          required: this.rdata.requiredMessage
         }
       }
     },
@@ -26,7 +26,7 @@
         required: true,
         type: Object
       },
-      renderData: {
+      rdata: {
         required: true,
         type: Object
       },
@@ -43,7 +43,6 @@
         type: Boolean
       },
       labelWidth: {
-        default: '140px',
         type: String
       }
     },
@@ -63,7 +62,6 @@
         this.$refs['tempForm'].validate(callback)
       },
       itemChange (item, val) {
-        console.log('itemChange item, val', item, val)
         var beDependentItems = item.beDependentItems || []
         beDependentItems.forEach(elm => {
           this.model[elm.key] = ''
@@ -124,7 +122,6 @@
     },
     watch: {
       formItemList (newVal, oldVal) {
-        console.log('watch formItemList newVal, oldVal', newVal, oldVal)
         this.formItemList.forEach(item => {
           this.allFieldsMap[item.key] = item
           item.beDependentItems = []

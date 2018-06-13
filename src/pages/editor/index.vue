@@ -2,17 +2,17 @@
   .form-set
     el-row(:gutter="10").oper-container.clear-float.theme-border-D
       el-col(:span="3", :offset='21')
-        b-button(@click='saveEnable' v-ellipsis-title="" type="primary") {{renderData.save}}
+        b-button(@click='saveEnable' v-ellipsis-title="" type="primary") {{rdata.save}}
       //el-col(:span="3")
-        b-button(@click='validateForm') {{renderData.validateForm}}
+        b-button(@click='validateForm') {{rdata.validateForm}}
     .content.theme-bg-H
-      .left.draggable-item-container.theme-bg-I
-        .title.theme-color-A {{renderData.controlBase}}
+      .left.draggable-item-container
+        .title.theme-color-A {{rdata.controlBase}}
         .item.theme-bg-H.theme-border-D.theme-border-A-hover.theme-color-C(v-for="(temp, $index) in templateList", :key="temp.icon", :idx="$index",  v-draggable="handler", origin='left')
           b-icon.template-icon(:iconName="temp.icon")
           span {{temp.label}}
-      .middle
-        el-form.middle-container(label-width="140px", :model="model", ref="tempForm", label-position="left")
+      .middle.theme-bg-I
+        el-form.middle-container(label-width="140px", :model="model", ref="tmpForm", label-position="left")
           .title {{auditInfo.name}}
           .item(v-for="(item, $index) in formItemList", :key="item.key", :idx="$index",  v-dropable="handler", @click="currItem=item")
             .operate-menu
@@ -20,35 +20,35 @@
                 b-icon(iconName='move')
               .icon-conatainer
                 b-icon(iconName='delete', @click.native="deleteFormItem($index)")
-            el-form-item(label-width="140px", :prop="item.key", :rules="getRules(item)", :key="$index")
+            el-form-item(:prop="item.key", :rules="getRules(item)", :key="$index")
               span.inline-label(slot="label", v-ellipsis-title="", :class="{'theme-color-A': currItem===item}") {{item.type=='clause'?'':item.label}}
-              b-form-item(:model.sync='model[item.key]', :item='item', @change="itemChange", :renderData="renderData")
+              b-form-item(:model.sync='model[item.key]', :item='item', @change="itemChange", :rdata="rdata")
           .blank-item(v-dropable="handler", :idx="formItemList.length")
             .line
               b-icon(iconName='move1', size="50px")
-            .line {{renderData.addControlCreatorAudit}}
-      .right.theme-bg-I
+            .line {{rdata.addControlCreatorAudit}}
+      .right
         el-tabs(v-model='activePane')
-          el-tab-pane(name="1", :label="renderData.workflowInfo")
+          el-tab-pane(name="1", :label="rdata.workflowInfo")
             el-form(ref="auditInfoForm", :rules="rules", :model="auditInfo", label-position="left").form-info
-              el-form-item(prop="name", :label="renderData.workflowName")
-                b-input(:model.sync="auditInfo.name", :placeholder="renderData.pleaseInput")
-              el-form-item(prop="_key", :label="renderData.pageId")
-                b-input(:model.sync="auditInfo._key", :placeholder="renderData.pleaseInput")
+              el-form-item(prop="name", :label="rdata.workflowName")
+                b-input(:model.sync="auditInfo.name", :placeholder="rdata.pleaseInput")
+              el-form-item(prop="_key", :label="rdata.pageId")
+                b-input(:model.sync="auditInfo._key", :placeholder="rdata.pleaseInput")
               el-form-item(prop="listUrl", label="List Url")
-                b-input(:model.sync="auditInfo.listUrl", :placeholder="renderData.pleaseInput")
+                b-input(:model.sync="auditInfo.listUrl", :placeholder="rdata.pleaseInput")
               el-form-item(prop="deleteUrl", label="Delete Url")
-                b-input(:model.sync="auditInfo.deleteUrl", :placeholder="renderData.pleaseInput")
+                b-input(:model.sync="auditInfo.deleteUrl", :placeholder="rdata.pleaseInput")
               el-form-item(prop="detailUrl", label="Detail Url")
-                b-input(:model.sync="auditInfo.detailUrl", :placeholder="renderData.pleaseInput")
+                b-input(:model.sync="auditInfo.detailUrl", :placeholder="rdata.pleaseInput")
               el-form-item(prop="editUrl", label="Edit Url")
-                b-input(:model.sync="auditInfo.editUrl", :placeholder="renderData.pleaseInput")
+                b-input(:model.sync="auditInfo.editUrl", :placeholder="rdata.pleaseInput")
               //el-form-item(prop="description.label")
                 template(slot="label")
-                  span.theme-color-C.inline-label(v-text="renderData.description", v-ellipsis-title="")
-                b-input(:model.sync="auditInfo.description.label", :placeholder="renderData.pleaseInput", :rows="3")
-          el-tab-pane(name="2", :label="renderData.controlSet")
-            form-item-set(v-for="(item, $index) in formItemList",:key='$index', v-show="currItem==item", :item="item", :renderData="renderData", :allFormItems="formItemList", ref="formItemSet")
+                  span.theme-color-C.inline-label(v-text="rdata.description", v-ellipsis-title="")
+                b-input(:model.sync="auditInfo.description.label", :placeholder="rdata.pleaseInput", :rows="3")
+          el-tab-pane(name="2", :label="rdata.controlSet")
+            form-item-set(v-for="(item, $index) in formItemList",:key='$index', v-show="currItem==item", :item="item", :rdata="rdata", :allFormItems="formItemList", ref="formItemSet")
 
 </template>
 
@@ -69,7 +69,7 @@
       return {
         page: this.$router.currentRoute.query.page,
         allFieldsMap: {},
-        renderData: service.getRenderDataSync({page: 'editor'}),
+        rdata: service.getRenderDataSync({page: 'editor'}),
         formSet: {},
         currItem: {},
         auditInfo: {
@@ -92,7 +92,6 @@
             if (!el.getAttribute('dropable')) {
               return
             }
-            console.log('drop handler')
             var origin = event.dataTransfer.getData('origin')
             var sourceIdx = parseInt(event.dataTransfer.getData('sourceIdx'))
             var targetIdx = parseInt(event.target.getAttribute('idx'))
@@ -132,7 +131,7 @@
     created () {
       var params = {page: 'editor'}
       service.getRenderData(params).then(res => {
-        Object.assign(this.renderData, res)
+        Object.assign(this.rdata, res)
       })
     },
     computed: {
@@ -141,7 +140,7 @@
           {
             type: 'input',
             icon: 'inputbox',
-            label: this.renderData.singleLineInputBox,
+            label: this.rdata.singleLineInputBox,
             list: true,
             detail: true,
             search: true,
@@ -150,7 +149,7 @@
           {
             type: 'textarea',
             icon: 'multilineinputbox',
-            label: this.renderData.multipleInputBox,
+            label: this.rdata.multipleInputBox,
             list: true,
             detail: true,
             search: true,
@@ -160,7 +159,7 @@
             type: 'select',
             icon: 'radio',
             dataSource: [],
-            label: this.renderData.radio,
+            label: this.rdata.radio,
             list: true,
             detail: true,
             search: true,
@@ -171,7 +170,7 @@
             icon: 'checkbox',
             multiple: true,
             dataSource: [],
-            label: this.renderData.checkbox,
+            label: this.rdata.checkbox,
             list: true,
             detail: true,
             search: true,
@@ -180,7 +179,7 @@
           {
             type: 'datetime',
             icon: 'date',
-            label: this.renderData.dateTime,
+            label: this.rdata.dateTime,
             list: true,
             detail: true,
             search: true,
@@ -189,7 +188,7 @@
           {
             type: 'text',
             icon: 'explanatorytext',
-            label: this.renderData.caption,
+            label: this.rdata.caption,
             list: false,
             detail: true,
             search: false,
@@ -198,12 +197,12 @@
           // {
           //   type: 'upload',
           //   icon: 'file',
-          //   label: this.renderData.enclosure
+          //   label: this.rdata.enclosure
           // },
           // {
           //   type: 'cascadeSelect',
           //   icon: 'Group',
-          //   label: this.renderData.cascadeInquire,
+          //   label: this.rdata.cascadeInquire,
           //   follow: [],
           //   dataSource: ''
           // }
@@ -213,33 +212,33 @@
         return {
           longText: {
             name: 'longText',
-            label: this.renderData.longTextRule,
+            label: this.rdata.longTextRule,
             rule: {
               name: 'longText',
               regex: constants.longTextRule,
               validator: validator.validate,
-              message: this.renderData.content1000More,
+              message: this.rdata.content1000More,
               trigger: 'blur'
             }
           },
           number: {
             name: 'number',
-            label: this.renderData.numberRule,
+            label: this.rdata.numberRule,
             rule: {
               name: 'number',
               regex: constants.numberRule,
               validator: validator.validate,
-              message: this.renderData.pleaseInput,
+              message: this.rdata.pleaseInput,
               trigger: 'blur'
             }
           },
           required: {
             name: 'required',
-            label: this.renderData.required,
+            label: this.rdata.required,
             rule: {
               name: 'required',
               required: true,
-              message: this.renderData.pleaseInput,
+              message: this.rdata.pleaseInput,
               trigger: 'blur'
             }
           }
@@ -250,12 +249,12 @@
           name: [
             {
               required: true,
-              message: this.renderData.pleaseInput,
+              message: this.rdata.pleaseInput,
               trigger: 'blur'
             },
             {
               validator: validator.validate,
-              message: this.renderData.noAllowSpace,
+              message: this.rdata.noAllowSpace,
               test (val) {
                 return val.trim() === val
               },
@@ -265,35 +264,35 @@
           listUrl: [
             {
               required: true,
-              message: this.renderData.pleaseInput,
+              message: this.rdata.pleaseInput,
               trigger: 'blur'
             }
           ],
           deleteUrl: [
             {
               required: true,
-              message: this.renderData.pleaseInput,
+              message: this.rdata.pleaseInput,
               trigger: 'blur'
             }
           ],
           detailUrl: [
             {
               required: true,
-              message: this.renderData.pleaseInput,
+              message: this.rdata.pleaseInput,
               trigger: 'blur'
             }
           ],
           _key: [
             {
               required: true,
-              message: this.renderData.pleaseInput,
+              message: this.rdata.pleaseInput,
               trigger: 'blur'
             }
           ],
           editUrl: [
             {
               required: true,
-              message: this.renderData.pleaseInput,
+              message: this.rdata.pleaseInput,
               trigger: 'blur'
             }
           ],
@@ -301,12 +300,12 @@
             {
               regex: constants.text0To128Limit,
               validator: validator.validate,
-              message: this.renderData.textLength128,
+              message: this.rdata.textLength128,
               trigger: 'blur'
             },
             {
               validator: validator.validate,
-              message: this.renderData.noAllowSpace,
+              message: this.rdata.noAllowSpace,
               test (val) {
                 return val.trim() === val
               },
@@ -327,7 +326,7 @@
               test (val) {
                 return !!val // 要求checkbox 必须为true
               },
-              message: this.renderData[ruleItem],
+              message: this.rdata[ruleItem],
               trigger: ['blur', 'change']
             })
           } else if (ruleItem === 'required' && item.type === 'upload') {
@@ -337,7 +336,7 @@
               test (val) {
                 return !!val.url // 要求upload 必须为有url
               },
-              message: this.renderData['required'],
+              message: this.rdata['required'],
               trigger: ['blur', 'change']
             })
           } else if (ruleItem.includes('api')) {
@@ -352,13 +351,12 @@
               validator: validator.validate
             })
           } else {
-            rule.message = this.renderData[ruleItem]
+            rule.message = this.rdata[ruleItem]
             res.push(rule)
           }
 
           return res
         }, [])
-        console.log('get rules', res)
         return res
       },
       itemChange (item, val) {
@@ -374,11 +372,10 @@
         })
       },
       validateForm () {
-        this.$refs['tempForm'].validate()
+        this.$refs['tmpForm'].validate()
       },
       saveEnable () {
         var valid = true
-        console.log('saveEnable')
         this.$refs['auditInfoForm'].validate(re => {
           valid = re && valid
           if (!valid) {
@@ -386,7 +383,6 @@
           }
         })
         this.$refs['formItemSet'].forEach((form, idx) => {
-          console.log('formItemSet', form, form.validate)
           form.validate(res => {
             if (!valid) return
             valid = valid && res
@@ -402,7 +398,7 @@
             formItemList: this.formItemList
           }
           service.saveEnable(params).then(res => {
-            this.$message({type: 'success', message: this.renderData.operateSuccess})
+            this.$message({type: 'success', message: this.rdata.operateSuccess})
             window.location.reload()
           })
         }
@@ -439,7 +435,6 @@
         if (this.formItemList.length === 1) {
           this.currItem = this.formItemList[0]
         }
-        console.log('watch formItemList newVal, oldVal', newVal, oldVal)
         this.formItemList.forEach(item => {
           this.allFieldsMap[item.key] = item
           item.beDependentItems = []

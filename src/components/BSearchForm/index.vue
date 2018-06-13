@@ -33,7 +33,6 @@
     computed: {
       computedFields () {
         var searchFields = Object.assign([], this.searchFields).filter(item => item.search)
-        console.log('searchFields', searchFields)
         var count = 0
         var pointer = -1
         for (var idx in searchFields) {
@@ -60,14 +59,14 @@
           styleType: 'primary',
           offset: searchBtnOffset,
           width: 3,
-          value: this.renderData.search
+          value: this.rdata.search
         }
         var resetButton = {
           type: 'button',
           handler: 'reset',
           styleType: 'secondary',
           width: 3,
-          value: this.renderData.reset
+          value: this.rdata.reset
         }
         if (searchFields.length !== 0) {
           searchFields.splice(pointer, 0, searchButton, resetButton)
@@ -90,7 +89,7 @@
         type: Array,
         required: true
       },
-      renderData: {
+      rdata: {
         type: Object,
         required: true
       }

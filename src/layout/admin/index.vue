@@ -1,9 +1,10 @@
 <template lang="pug">
-  .layout(:class="[layout]")
+  .layout(:class="[layout, 'theme-'+theme]")
     .container.clear-float
-      admin-nav(:renderData="renderData", :layout="layout")
+      .nav-container.theme-bg-B
+        admin-nav(:rdata="rdata", :layout="layout")
       .content.theme-bg-H
-        admin-header(:renderData="renderData" @refresh="refresh")
+        admin-header(:rdata="rdata" @refresh="refresh" :config="{layout, theme}")
         router-view
 </template>
 
@@ -17,28 +18,29 @@
     data () {
       return {
         layout: 'horizontal',
-        renderData: service.getRenderDataSync({page: 'admin'})
+        theme: 'default',
+        rdata: service.getRenderDataSync({page: 'admin'})
       }
     },
     created () {
       var params = {page: 'admin'}
       service.getRenderData(params).then(res => {
-        Object.assign(this.renderData, res)
+        Object.assign(this.rdata, res)
       })
     },
     methods: {
       refresh () {
-        this.$emit('refresh')
-        this.layout = window.localStorage.getItem('layout')
+        this.getConfig()
       },
-      getLayout () {
-        service.getLayout().then(res => {
-          this.layout = res
+      getConfig () {
+        service.getConfig().then(res => {
+          this.layout = res.layout
+          this.theme = res.theme
         })
       }
     },
     mounted () {
-      this.getLayout()
+      this.getConfig()
     },
     components: {
       adminNav,
@@ -62,11 +64,17 @@
       height: 100%;
       display: flex;
       flex-direction: column;
-      .admin-nav {
+      .nav-container {
         padding: 0 20px;
+        .admin-nav {
+          margin: auto;
+          width: 1200px;
+        }
       }
       > .content {
         padding: 20px;
+        margin: auto;
+        width: 1200px;
         position: relative;
         flex-grow: 1;
         overflow-y: auto;
@@ -83,7 +91,7 @@
       flex-grow: 1;
       display: flex;
       height: 100%;
-      > .admin-nav {
+      > .nav-container {
         width: 200px;
         padding: 50px 0;
       }

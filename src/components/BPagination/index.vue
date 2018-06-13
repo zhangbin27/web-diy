@@ -27,7 +27,6 @@
         }
       },
       handleSizeChange (pageSize) {
-        console.log('pageSize', pageSize)
         this.pagination.pageSize = pageSize
         this.$emit('size-change')
       },

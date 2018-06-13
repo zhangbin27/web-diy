@@ -125,12 +125,201 @@ var struct = {
   admin: {
     module: '模块',
     editor: '编辑器',
+    audit: '审批',
     save: '保存',
     optionColor: '可选配色',
     cancel: '取消',
     color: '选择配色',
     configText: '配置文案',
     theme: '主题切换'
+  },
+  'audit': {
+    'cTime': '创建时间',
+    'process': '审核处理',
+    'workflow': '工作流',
+    'reset': '重置',
+    'requiredMessage': '请输入',
+    'applyLabel': '我的申请',
+    'historyLabel': '审核历史',
+    'auditLabel': '我的审核',
+    'applyNow': '申请 +',
+    'operateSuccess': '操作成功',
+    'save': '保存',
+    'cancel': '取消',
+    'add': '新增',
+    'detail': '详情',
+    '__cancel__': '取消',
+    '__process__': '处理',
+    '__nextAuditor__': '下一审核人',
+    '__detail__': '详情',
+    '__applicant__': '申请人',
+    '__auditor__': '审核人',
+    '__status__': '状态',
+    '__cTime__': '创建时间',
+    '__endTime__': '结束时间',
+    '__workflow__': '工作流',
+    apply: {
+      'numberMessage': '请输入数字',
+      'longTextMessage': '请输入小于10000个字符',
+      'requiredMessage': '请输入',
+      'save': '保存',
+      'cancel': '取消',
+      'add': '新增',
+      'editConfig': '编辑配置',
+      'detail': '详情',
+      'delete': '删除',
+      'edit': '编辑',
+      'operateSuccess': '操作成功',
+      'operation': '操作',
+      'more': '更多',
+      'search': '搜索',
+      'reset': '重置',
+      'searchFields': [],
+      'headerCols': [
+        {
+          list: true,
+          field: 'workflow',
+          label: '__workflow__',
+          width: 3
+        },
+        {
+          list: true,
+          field: 'cTime',
+          label: '__cTime__',
+          width: 3
+        },
+        {
+          list: true,
+          field: 'auditor',
+          label: '__auditor__',
+          width: 3
+        },
+        {
+          list: true,
+          field: 'status',
+          label: '__status__',
+          width: 3
+        }
+      ],
+      'operateOpts': [
+        {
+          'label': '__cancel__',
+          'auth': 'cancel'
+        }
+      ]
+    },
+    audit: {
+      'numberMessage': '请输入数字',
+      'longTextMessage': '请输入小于10000个字符',
+      'requiredMessage': '请输入',
+      'save': '保存',
+      'cancel': '取消',
+      'add': '新增',
+      'editConfig': '编辑配置',
+      'detail': '详情',
+      'delete': '删除',
+      'edit': '编辑',
+      'operateSuccess': '操作成功',
+      'operation': '操作',
+      'more': '更多',
+      'search': '搜索',
+      'reset': '重置',
+      'searchFields': [],
+      'headerCols': [
+        {
+          list: true,
+          field: 'workflow',
+          label: '__workflow__',
+          width: 3
+        },
+        {
+          list: true,
+          field: 'applicant',
+          label: '__applicant__',
+          width: 3
+        },
+        {
+          list: true,
+          field: 'nextAuditor',
+          label: '__nextAuditor__',
+          width: 3
+        },
+        {
+          list: true,
+          field: 'cTime',
+          label: '__cTime__',
+          width: 3
+        }
+      ],
+      'operateOpts': [
+        {
+          'label': '__process__',
+          'auth': 'process'
+        }
+      ]
+    },
+    history: {
+      'numberMessage': '请输入数字',
+      'longTextMessage': '请输入小于10000个字符',
+      'requiredMessage': '请输入',
+      'save': '保存',
+      'cancel': '取消',
+      'add': '新增',
+      'editConfig': '编辑配置',
+      'detail': '详情',
+      'delete': '删除',
+      'edit': '编辑',
+      'operateSuccess': '操作成功',
+      'operation': '操作',
+      'more': '更多',
+      'search': '搜索',
+      'reset': '重置',
+      'searchFields': [],
+      'headerCols': [
+        {
+          list: true,
+          field: 'workflow',
+          label: '__workflow__',
+          width: 3
+        },
+        {
+          list: true,
+          field: 'applicant',
+          label: '__applicant__',
+          width: 3
+        },
+        {
+          list: true,
+          field: 'auditor',
+          label: '__auditor__',
+          width: 3
+        },
+        {
+          list: true,
+          field: 'status',
+          label: '__status__',
+          width: 3
+        },
+        {
+          list: true,
+          field: 'cTime',
+          label: '__cTime__',
+          width: 3
+        },
+        {
+          list: true,
+          field: 'endTime',
+          label: '__endTime__',
+          width: 3
+        }
+      ],
+      'operateOpts': [
+        {
+          'label': '__detail__',
+          'auth': 'checkHistory'
+        }
+      ]
+    }
   }
 }
 export default struct

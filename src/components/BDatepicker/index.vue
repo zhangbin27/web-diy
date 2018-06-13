@@ -1,5 +1,5 @@
 <template lang="pug">
-  el-date-picker.b-date-picker(:type="type", v-model="value", :start-placeholder='placeholder', :end-placeholder='placeholder', @change="changeHandle")
+  el-date-picker.b-date-picker(:type="type", v-model="value", :start-placeholder='placeholder', :end-placeholder='placeholder', @change="changeHandle" :disabled="disabled")
 
 </template>
 
@@ -20,7 +20,11 @@
       },
       placeholder: {
         type: String,
-        required: true
+        default: ''
+      },
+      disabled: {
+        type: Boolean,
+        default: false
       },
       type: {
         type: String,

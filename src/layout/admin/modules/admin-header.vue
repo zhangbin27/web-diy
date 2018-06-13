@@ -8,9 +8,9 @@
       span(@click="layoutChange('vertical')" :class="verticalCls")  vertical
       span &nbsp;/&nbsp;
       span(@click="layoutChange('horizontal')" :class="horizontalCls")   horizontal
-    span.colors.theme-color-A(@click="chooseColor")  {{renderData.color}}
-    span.text.theme-color-A(@click="configText")  {{renderData.configText}}
-    component(:is="visible.dialog", :renderData="renderData", @close="closeModal", :colors="colors")
+    span.colors.theme-color-A(@click="chooseColor")  {{rdata.color}}
+    span.text.theme-color-A(@click="configText")  {{rdata.configText}}
+    component(:is="visible.dialog", :rdata="rdata", @close="closeModal", :colors="colors")
 </template>
 
 <script>
@@ -24,12 +24,16 @@
       return {
         colors: [],
         visible: {dialog: null},
-        theme: 'default',
-        layout: 'horizontal'
+        theme: this.config.theme,
+        layout: this.config.layout
       }
     },
     props: {
-      renderData: {
+      rdata: {
+        required: true,
+        type: Object
+      },
+      config: {
         required: true,
         type: Object
       }
@@ -68,6 +72,7 @@
       getColors () {
         service.getColors().then(colors => {
           this.colors = colors
+          window.changeColor.forEach(fn => fn(this.colors))
         })
       },
       closeModal () {
@@ -84,26 +89,21 @@
           return
         }
         this.theme = theme
-        localStorage.setItem('theme', theme)
-        this.$emit('refresh')
+        service.setTheme({theme}).then(() => {
+          this.$emit('refresh')
+        })
       },
       layoutChange (layout) {
         if (this.layout === layout) {
           return
         }
         this.layout = layout
-        localStorage.setItem('layout', layout)
-        this.$emit('refresh')
-      },
-      getConfig () {
-        service.getConfig().then(res => {
-          this.theme = res.theme
-          this.layout = res.layout
+        service.setLayout({layout}).then(() => {
+          this.$emit('refresh')
         })
       }
     },
     mounted () {
-      this.getConfig()
       this.getColors()
     }
   }

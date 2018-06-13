@@ -1,6 +1,6 @@
 <template lang="pug">
-  #app(:class="['theme-'+theme]")
-    router-view(@refresh="refresh")
+  #app
+    router-view
 </template>
 
 <script>
@@ -8,13 +8,9 @@
     name: 'App',
     data () {
       return {
-        theme: window.localStorage.getItem('theme') || 'default'
       }
     },
     methods: {
-      refresh () {
-        this.theme = window.localStorage.getItem('theme')
-      }
     }
   }
 </script>

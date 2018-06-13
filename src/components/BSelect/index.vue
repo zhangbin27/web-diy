@@ -41,7 +41,6 @@
     },
     methods: {
       changeHandle (value) {
-        console.log('select changeHandle', arguments)
         this.$emit('update:model', this.tmpModel)
         this.$emit('change', value)
       }
@@ -52,7 +51,6 @@
       }
     },
     mounted () {
-      console.log('valueKey', this.valueKey)
     }
   }
 </script>

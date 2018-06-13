@@ -1,9 +1,9 @@
 <template lang="pug">
-  b-dialog(:show='true', :title="renderData.edit", :show-close="true", :before-close="close" width="40%").edit
-    c-form(:model="tempForm", ref="tempForm", :formItemList="formItemList", :renderData="renderData", label-width="140px", label-position="left", :visible="visible")
+  b-dialog(:show='true', :title="rdata.edit", :show-close="true", :before-close="close" width="40%").edit
+    c-form(:model="tmpData", ref="tmpForm", :formItemList="formItemList", :rdata="rdata", label-width="140px", label-position="left", :visible="visible")
     template(slot="footer")
-      b-button(@click="close") {{renderData.cancel}}
-      b-button(@click="save", type="primary" v-if="!disabled") {{renderData.save}}
+      b-button(@click="close") {{rdata.cancel}}
+      b-button(@click="save", type="primary" v-if="!disabled") {{rdata.save}}
 </template>
 
 <script>
@@ -19,11 +19,11 @@
     data () {
       return {
         page: this.$router.currentRoute.query.page,
-        tempForm: {}
+        tmpData: {}
       }
     },
     props: {
-      renderData: {
+      rdata: {
         required: true
       },
       pageInfo: {
@@ -48,7 +48,7 @@
       getDetail () {
         service.getDetail(this.currRow, this.pageInfo.detailUrl).then(({data}) => {
           Object.keys(data).forEach(key => {
-            this.$set(this.tempForm, key, data[key])
+            this.$set(this.tmpData, key, data[key])
           })
         })
       },
@@ -56,17 +56,17 @@
         this.visible.dialog = null
       },
       save () {
-        this.$refs['tempForm'].validate(valid => {
+        this.$refs['tmpForm'].validate(valid => {
           if (valid) {
             var params = {
               page: this.page,
               data: {
-                ...this.tempForm,
+                ...this.tmpData,
                 ...this.visible.dialog === 'add' ? {_key: '_key' + new Date().getTime()} : {_key: this.currRow._key}
               }
             }
             service.edit(params, this.pageInfo.editUrl).then(res => {
-              this.$message({type: 'success', message: this.renderData.operateSuccess})
+              this.$message({type: 'success', message: this.rdata.operateSuccess})
               this.close()
               this.$emit('refresh')
             })

@@ -2,8 +2,7 @@
 import colorParse from 'common/js/colorParse.js'
 import styleMixinLess from '!raw-loader!../styleSheet/styleMixin.less'
 
-var handler = function () {
-  var color = JSON.parse(localStorage.getItem('colors') || '[]')
+var handler = function (color) {
   let styleEle = document.createElement('style')
   document.querySelector('head').appendChild(styleEle)
   styleEle.innerHTML = colorParse(color)
@@ -20,4 +19,3 @@ if (window.changeColor) {
 } else {
   window.changeColor = [handler]
 }
-handler()

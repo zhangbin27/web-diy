@@ -1,14 +1,14 @@
 <template lang="pug">
-  b-dialog(:show='true', :title="renderData.viewGraph", :show-close="true", :before-close="close" width="60%").view-graph
+  b-dialog(:show='true', :title="rdata.viewGraph", :show-close="true", :before-close="close" width="60%").view-graph
     el-row.clear-float
       el-col(:span="6")
         el-form(:model="detail", :rules="rules", ref="form")
           el-form-item(prop="xAxis", label="xAxis")
-            b-select(:model.sync="detail.xAxis", :placeholder="renderData.pleaseSelect", @change='fieldChange')
-              el-option(v-for="item in renderData.searchFields" ,:key="item.field", :value="item.field", :label="item.label", v-show="item.field!=detail.yAxis")
+            b-select(:model.sync="detail.xAxis", :placeholder="rdata.pleaseSelect", @change='fieldChange')
+              el-option(v-for="item in rdata.searchFields" ,:key="item.field", :value="item.field", :label="item.label", v-show="item.field!=detail.yAxis")
           el-form-item(prop="yAxis", label="yAxis")
-            b-select(:model.sync="detail.yAxis", :placeholder="renderData.pleaseSelect", @change='fieldChange')
-              el-option(v-for="item in renderData.searchFields" ,:key="item.field", :value="item.field", :label="item.label", v-show="item.field!=detail.xAxis")
+            b-select(:model.sync="detail.yAxis", :placeholder="rdata.pleaseSelect", @change='fieldChange')
+              el-option(v-for="item in rdata.searchFields" ,:key="item.field", :value="item.field", :label="item.label", v-show="item.field!=detail.xAxis")
       el-col(:span="18")
         #graph
 </template>
@@ -30,14 +30,14 @@
             {
               required: true,
               trigger: ['change', 'blur'],
-              message: this.renderData.pleaseSelect
+              message: this.rdata.pleaseSelect
             }
           ],
           yAxis: [
             {
               required: true,
               trigger: ['change', 'blur'],
-              message: this.renderData.pleaseSelect
+              message: this.rdata.pleaseSelect
             }
           ]
         },
@@ -52,7 +52,7 @@
         type: Array,
         required: true
       },
-      renderData: {
+      rdata: {
         required: true
       },
       visible: {
@@ -62,7 +62,7 @@
     methods: {
       generateGraph () {
         this.chart = echarts.init(window.graph)
-        var cols = this.renderData.headerCols
+        var cols = this.rdata.headerCols
         var table = JSON.parse(JSON.stringify(this.table))
         table.forEach((row, rowIdx) => {
           for (var col of cols) {

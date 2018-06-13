@@ -1,14 +1,14 @@
 <template lang="pug">
-  b-dialog(:show='true', :title="renderData.configText", :show-close="true", :before-close="close" width="40%").edit-text
+  b-dialog(:show='true', :title="rdata.configText", :show-close="true", :before-close="close" width="40%").edit-text
     el-form(ref="form").clear-float
-      el-form-item(:label="renderData.module")
+      el-form-item(:label="rdata.module")
         b-select(:model.sync="key")
           el-option(v-for="keyOp in Object.keys(data)" :key="keyOp" :label="keyOp" :value="keyOp")
       el-form-item(v-for="subKey in Object.keys(module)", :label="subKey" :key="key+subKey" v-if="typeof module[subKey] === 'string'")
         b-input(:model.sync="module[subKey]")
     template(slot="footer")
-      b-button(@click="close") {{renderData.cancel}}
-      b-button(@click="save", type="primary") {{renderData.save}}
+      b-button(@click="close") {{rdata.cancel}}
+      b-button(@click="save", type="primary") {{rdata.save}}
 </template>
 
 <script>
@@ -28,7 +28,7 @@
       }
     },
     props: {
-      renderData: {
+      rdata: {
         required: true
       }
     },

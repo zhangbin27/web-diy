@@ -3,11 +3,11 @@
     el-table(:data="tableData" style="width:100%", @row-click='handleRowClick', v-loading="loading", @sort-change="sortChange", :row-class-name="getRowClass", ref="bTable", @selection-change="selectionChange")
       el-table-column(type="expand" v-if="tableType.expand && computedHeaderCols.length!==0")
         template(slot-scope="scope")
-          slot(name="expand", :computedHeaderCols="computedHeaderCols", :otherCols="otherCols", :computedOpts="computedOpts", :row="scope.row", :operateOpts="renderData.operateOpts")
-      el-table-column(type="selection", width="55" v-if="renderData.multipleSelect")
+          slot(name="expand", :computedHeaderCols="computedHeaderCols", :otherCols="otherCols", :computedOpts="computedOpts", :row="scope.row", :operateOpts="rdata.operateOpts")
+      el-table-column(type="selection", width="55" v-if="rdata.multipleSelect")
       el-table-column(:label='col.label', :render-header="headerRenderFun", v-for="col in computedHeaderCols", :key='col.field', :sortable="col.sortable", :prop="col.field", :formatter="formatter(col)")
 
-      el-table-column.el-table-scroll(:label="renderData.more" v-if="otherCols.length")
+      el-table-column.el-table-scroll(:label="rdata.more" v-if="otherCols.length")
         template(slot-scope="scope")
           el-popover.theme-color-H(trigger="click" placement="bottom" ref="popoverMore")
             .el-popover-item-intable(v-for="(col, idx) in otherCols", :key="idx")
@@ -21,7 +21,7 @@
                   .right(v-text='getLabel(item, key)' v-ellipsis-title="")
             b-icon.pointer.theme-color-lightenC32.theme-color-lightenA10-hover.theme-color-darkenA10-active(iconName="more", slot="reference")
 
-      el-table-column(:label="renderData.operation" align='center' v-if="renderData.operateOpts && renderData.operateOpts.length")
+      el-table-column(:label="rdata.operation" align='center' v-if="rdata.operateOpts && rdata.operateOpts.length")
         template(slot-scope="scope")
           a.link.theme-color-A.pointer(v-if="computedOpts.length==1", @click="handleCommand(computedOpts[0].auth, scope.row)") {{computedOpts[0].label}}
           el-dropdown.theme-color-lightenC32.theme-color-lightenA10-hover.theme-color-darkenA10-active(@command="handleCommand" trigger='click', v-if="computedOpts.length > 1")
@@ -30,7 +30,7 @@
             el-dropdown-menu.ipt-class.theme-bg-H(slot="dropdown")
               el-dropdown-item.theme-bg-lightenD12-hover.theme-color-C.theme-color-C-hover(:command='op.auth' v-for="op in computedOpts" v-text="op.label", :key='op.auth', :disabled="op.authStatus==='disabled'")
 
-    .batch-operate(v-if="renderData.multipleSelect")
+    .batch-operate(v-if="rdata.multipleSelect")
       slot(name="batchOperate", :total="pagination.total")
     .pagination
       b-pagination(v-if="!!pagination.total", @size-change="handleSizeChange", @current-change='handleCurrentChange', :layout="layout", :pagination="pagination")
@@ -103,7 +103,7 @@
       optHandler: {
         type: Object
       },
-      renderData: {
+      rdata: {
         type: Object,
         required: true
       },
@@ -150,7 +150,7 @@
         return element
       },
       formatter (col) {
-        var colWithFun = this.renderData.headerCols.find(elm => elm.field === col.field) // colWithFun 有 formatter
+        var colWithFun = this.rdata.headerCols.find(elm => elm.field === col.field) // colWithFun 有 formatter
         var formatter = colWithFun.formatter
         var _this = this
         var h = _this.$createElement
@@ -202,10 +202,8 @@
         }
       },
       handleCommand (command, row) {
-        var renderData = Object.assign(this.renderData, this.renderData.operateOpts.find(opt => opt.auth === command)[command])
-        console.log('command', command, renderData)
-        console.log('this.currRow', this.currRow)
-        this.optHandler[command](Object.keys(this.currRow).length ? this.currRow : row, renderData)
+        var rdata = Object.assign(this.rdata, this.rdata.operateOpts.find(opt => opt.auth === command)[command])
+        this.optHandler[command](Object.keys(this.currRow).length ? this.currRow : row, rdata)
       },
       handleSizeChange () {
 //        this.searchData = this.searchDataBak
@@ -213,14 +211,12 @@
         this.refresh()
       },
       handleCurrentChange (page) {
-        console.log('handleCurrentChange', page)
-//        this.searchData = this.searchDataBak
         Object.assign(this.searchData, this.searchDataBak)
         this.refresh()
       },
       async refresh () {
         await this.getData()
-        if (this.renderData.multipleSelect) {
+        if (this.rdata.multipleSelect) {
           this.toggleSelectedRow(this.tableData)
         }
       },
@@ -256,7 +252,6 @@
         this.refresh()
       },
       showFile (item) {
-        console.log(item)
 //        window.open('http://www.baidu.com')
       },
       showLabel (data) {
@@ -273,23 +268,22 @@
     computed: {
       computedOpts () {
         if (typeof this.optsFilter === 'function') {
-          return this.optsFilter(this.renderData.operateOpts, this.currRow)
+          return this.optsFilter(this.rdata.operateOpts, this.currRow)
         }
-        return this.renderData.operateOpts || []
+        return this.rdata.operateOpts || []
       },
       computedHeaderCols () {
-        var headerCols = JSON.parse(JSON.stringify(this.renderData.headerCols)).filter(item => item.list)
+        var headerCols = JSON.parse(JSON.stringify(this.rdata.headerCols)).filter(item => item.list)
         if (this.computedOpts.length && headerCols.length > 8) {
           headerCols.splice(7)
         }
         if (!this.computedOpts.length && headerCols.length > 9) {
           headerCols.splice(8)
         }
-        console.log('computedHeaderCols', headerCols)
         return headerCols
       },
       otherCols () {
-        var headerCols = JSON.parse(JSON.stringify(this.renderData.headerCols)).filter(item => item.list)
+        var headerCols = JSON.parse(JSON.stringify(this.rdata.headerCols)).filter(item => item.list)
         if (this.computedOpts.length && headerCols.length > 8) {
           return headerCols.splice(7)
         }
@@ -299,7 +293,6 @@
         return []
       },
       layout () {
-        console.log('this.pagination.pageSizes', this.pagination.pageSizes)
         if (this.pagination.pageSizes) {
           return 'total, sizes, prev, pager, next, jumper'
         } else {

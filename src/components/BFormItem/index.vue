@@ -1,20 +1,20 @@
 <template lang="pug">
   .b-form-item
-    b-input(v-if='item.type==="input"', :model.sync="tmpModel", @change='changeHandler', :placeholder='item.placeholder')
-    b-input(v-if='item.type==="textarea"', :model.sync="tmpModel", @change='changeHandler', :placeholder='item.placeholder', :rows="2")
-    b-range(v-if='item.type==="range"', :model.sync="tmpModel", @change='changeHandler', :placeholder='item.placeholder')
-    b-select(v-if='item.type==="select"', :model.sync="tmpModel", @change='changeHandler', :placeholder='item.placeholder', :multiple="item.multiple")
+    b-input(:disabled="disabled" v-if='item.type==="input"', :model.sync="tmpModel", @change='changeHandler', :placeholder='item.placeholder')
+    b-input(:disabled="disabled" v-if='item.type==="textarea"', :model.sync="tmpModel", @change='changeHandler', :placeholder='item.placeholder', :rows="2")
+    b-range(:disabled="disabled" v-if='item.type==="range"', :model.sync="tmpModel", @change='changeHandler', :placeholder='item.placeholder')
+    b-select(:disabled="disabled" v-if='item.type==="select"', :model.sync="tmpModel", @change='changeHandler', :placeholder='item.placeholder', :multiple="item.multiple")
       el-option(v-for="(opt, idx) in opts", :key='idx', :label='opt.val||opt.label',  :value='opt.key', :class="optionCls")
-    b-datepicker(v-if='item.type==="datetimerange"', :model.sync="tmpModel", @change='changeHandler', :placeholder='item.placeholder', :type="item.type")
-    b-datepicker(v-if='item.type==="datetime"', :model.sync="tmpModel", @change='changeHandler', :placeholder='item.placeholder', :type="item.type")
-    b-button(v-if='item.type==="button"', :type='item.styleType') {{item.value}}
+    b-datepicker(:disabled="disabled" v-if='item.type==="datetimerange"', :model.sync="tmpModel", @change='changeHandler', :placeholder='item.placeholder', :type="item.type")
+    b-datepicker(:disabled="disabled" v-if='item.type==="datetime"', :model.sync="tmpModel", @change='changeHandler', :placeholder='item.placeholder', :type="item.type")
+    b-button(:disabled="disabled" v-if='item.type==="button"', :type='item.styleType') {{item.value}}
     .b-text(v-if='item.type==="text"', :type='item.styleType') {{item.placeholder}}
-    b-upload(v-if='item.type==="upload"' action="/upload", v-model="tmpModel")
+    b-upload(:disabled="disabled" v-if='item.type==="upload"' action="/upload", v-model="tmpModel")
       i.el-icon-upload
       .el-upload__text {{item.placeholder}}
       .el-upload__tip(slot="tip") {{item.tooltip}}
     .cascade-select(v-if='item.type==="cascadeSelect"')
-      b-select(:model.sync="tmpModel", @change='changeHandler', :placeholder='item.placeholder')
+      b-select(:disabled="disabled" :model.sync="tmpModel", @change='changeHandler', :placeholder='item.placeholder')
         el-option(v-for="opt in opts", :key='opt.key', :label='opt.val||opt.label',  :value='opt.key', :class="optionCls")
       .sub-info(v-for="(field, idx) in cFields")
         span {{field.label + '  ' + field.key}}
@@ -50,14 +50,12 @@
     },
     methods: {
       changeHandler (value) {
-//        console.log('form item changeHandler')
         this.$emit('update:model', value || '')
         this.$emit('change', this.item, this.tmpModel)
       },
       getOpts (url) {
         var params = {}
         Object.assign(params, this.item.params, this.params)
-        console.log('params', ...arguments)
         if (url === '/api/resource/audit_start/get_mt4_by_user_name') { // z delete
           this.opts = [
             {
@@ -86,6 +84,10 @@
       model: {
         required: true
       },
+      disabled: {
+        type: Boolean,
+        default: false
+      },
       params: { // b-search-form 里传来参数
         type: Object,
         default () {
@@ -102,7 +104,6 @@
       },
       'item.params': {
         handler () {
-          console.log('item.params handler')
           var item = this.item
           if ((item.type === 'select' && typeof item.dataSource === 'string' && item.dataSource) || item.type === 'cascadeSelect') {
             this.getOpts(item.dataSource)

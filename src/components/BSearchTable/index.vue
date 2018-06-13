@@ -1,9 +1,9 @@
 <template lang="pug">
   .b-search-table
     .search-container
-      b-search-form(:search-fields="renderData.searchFields", :search-data="searchData", :params="params", @search='search', @reset='reset', :render-data="renderData")
+      b-search-form(:search-fields="rdata.searchFields", :search-data="searchData", :params="params", @search='search', @reset='reset', :rdata="rdata")
     .table.form-area
-      b-table.theme-bg-H(:search-data="searchData", :render-data="renderData", ref="table", :url="url", :params="params", :opt-handler="optHandler", :initSearch="initSearch",
+      b-table.theme-bg-H(:search-data="searchData", :rdata="rdata", ref="table", :url="url", :params="params", :opt-handler="optHandler", :initSearch="initSearch",
       :opts-filter="optsFilter", :tableType="tableType", :selectedRows="selectedRows", @selection-change="selectionChange", :valueKey="valueKey", :getRowClass="getRowClass", :uid="uid")
         template(slot="batchOperate", slot-scope="props")
           slot(name="batchOperate", :total="props.total")
@@ -53,7 +53,7 @@
       optHandler: {
         type: Object
       },
-      renderData: {
+      rdata: {
         type: Object,
         required: true
       },
@@ -72,11 +72,9 @@
         this.$emit('selection-change', ...arguments)
       },
       search () {
-        console.log('searchData ', this.searchData)
         this.$refs.table.search()
       },
       reset () {
-        console.log('reset')
         for (var key in this.searchData) {
           this.searchData[key] = ''
         }

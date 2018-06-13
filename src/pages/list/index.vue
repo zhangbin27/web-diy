@@ -1,12 +1,12 @@
 <template lang="pug">
   .list
     .oper-container.clear-float
-      i.el-icon-plus(@click="add", :title="renderData.add")
-      i.icon.iconfont.icon-user_profile_icon_1(@click="viewGraph", :title="renderData.viewGraph")
-      i.el-icon-setting(@click="editConfig", :title="renderData.editConfig")
-    b-search-table(:optHandler='optHandler', :render-data="renderData", :url="pageInfo.listUrl", ref="table" v-if="pageInfo.listUrl")
+      i.el-icon-plus(@click="add", :title="rdata.add")
+      i.icon.iconfont.icon-user_profile_icon_1(@click="viewGraph", :title="rdata.viewGraph")
+      i.el-icon-setting(@click="editConfig", :title="rdata.editConfig")
+    b-search-table(:optHandler='optHandler', :rdata="rdata", :url="pageInfo.listUrl", ref="table" v-if="!switching&&pageInfo.listUrl")
 
-    component(:is="visible.dialog", :currRow="currRow", :renderData="renderData", :visible="visible", :pageInfo="pageInfo", :formItemList="formItemList", @refresh="refresh", :table='table', @get-table-data='getTableData')
+    component(:is="visible.dialog", :currRow="currRow", :rdata="rdata", :visible="visible", :pageInfo="pageInfo", :formItemList="formItemList", @refresh="refresh", :table='table', @get-table-data='getTableData')
 </template>
 
 <script>
@@ -24,9 +24,10 @@
       // z todo 可以兼容手机端
       return {
         pageInfo: {},
-        renderData: service.getRenderDataSync({page: 'list'}),
+        rdata: service.getRenderDataSync({page: 'list'}),
         formItemList: [],
         table: [],
+        switching: false,
         currRow: {},
         page: this.$router.currentRoute.query.page,
         visible: {
@@ -45,7 +46,7 @@
     created () {
       var params = {page: 'list'}
       service.getRenderData(params).then(res => {
-        Object.assign(this.renderData, res)
+        Object.assign(this.rdata, res)
       })
     },
     methods: {
@@ -55,8 +56,25 @@
       refresh () {
         this.$refs['table'].search()
       },
+      getTableConfig (cb) {
+        service.getTableConfig(this.page).then(res => {
+          this.rdata.searchFields = res.searchFields
+          this.rdata.headerCols = res.headerCols
+          this.formItemList = res.formItemList
+          this.pageInfo = res.info
+          cb && cb()
+        })
+      },
+      reload () {
+        this.page = this.$router.currentRoute.query.page
+        this.getTableConfig(() => {
+          this.switching = true
+          setTimeout(() => {
+            this.switching = false
+          })
+        })
+      },
       getTableData () {
-        console.log('getTableData')
         this.table = this.$refs['table'].getTableData()
       },
       add () {
@@ -76,7 +94,7 @@
       delete (row) {
         this.currRow = row
         service.delete(row, this.pageInfo.deleteUrl).then(res => {
-          this.$message({type: 'success', message: this.renderData.operateSuccess})
+          this.$message({type: 'success', message: this.rdata.operateSuccess})
           this.refresh()
         })
       }
@@ -89,18 +107,12 @@
       'edit': edit,
       BSearchTable
     },
-    async mounted () {
-      console.log('log this.renderData', this.renderData)
-      await service.getTableConfig(this.page).then(res => {
-        this.renderData.searchFields = res.searchFields
-        this.renderData.headerCols = res.headerCols
-        this.formItemList = res.formItemList
-        this.pageInfo = res.info
-      })
+    mounted () {
+      this.getTableConfig()
+      window._listPage = this
     },
     watch: {
       'page' () {
-        console.log('currentRoute.dialog change')
       }
     }
   }
