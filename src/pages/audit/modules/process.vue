@@ -10,8 +10,8 @@
         b-input(:model.sync="applyData.applicant" :disabled="true")
     c-form(:model="applyData", :formItemList="applyForm", :rdata="rdata", :visible="{dialog:'detail'}" :disabled="true").apply-history
     c-form(v-for="(his, idx) in auditHistory" :key="idx" :model="his.data", :formItemList="his.form", :rdata="rdata", :visible="{dialog:'detail'}" :disabled="true").audit-history
-    c-form(:model="tmpData", ref="tmpForm", :formItemList="formItemList", :rdata="rdata", :visible="{dialog:'detail'}" v-if="visible.page=='process'")
-    .footer(slot="footer" v-if="visible.page=='process'")
+    c-form(:model="tmpData", ref="tmpForm", :formItemList="formItemList", :rdata="rdata", :visible="{dialog:'detail'}" v-if="visible.dialog=='process'")
+    .footer(slot="footer" v-if="visible.dialog=='process'")
       b-button(@click="reset") {{rdata.reset}}
       b-button(@click="save", type="primary") {{rdata.save}}
 </template>

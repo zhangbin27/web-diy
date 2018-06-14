@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import list from '@/pages/list'
 import editor from '@/pages/editor'
 import audit from '@/pages/audit'
+import workflow from '@/pages/workflow'
 import adminLayout from '@/layout/admin'
 
 Vue.use(Router)
@@ -28,6 +29,11 @@ export default new Router({
           path: 'audit',
           component: audit,
           name: 'audit'
+        },
+        {
+          path: 'workflow',
+          component: workflow,
+          name: 'workflow'
         }
       ]
     },

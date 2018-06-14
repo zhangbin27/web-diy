@@ -38,12 +38,13 @@
         service.getPages().then(res => {
           var pages = res.data
           pages.unshift({name: this.rdata.audit, _key: 'audit'})
+          pages.unshift({name: this.rdata.workflow, _key: 'workflow'})
           pages.unshift({name: this.rdata.editor, _key: 'editor'})
           this.pages = pages
         })
       },
       toPage (page) {
-        if (page === 'editor' || page === 'audit') {
+        if (page === 'editor' || page === 'audit' || page === 'workflow') {
           this.$router.push({path: '/admin/' + page})
         } else {
           var pre = this.$router.currentRoute.name

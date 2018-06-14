@@ -124,6 +124,7 @@ var struct = {
   },
   admin: {
     module: '模块',
+    workflow: '工作流',
     editor: '编辑器',
     audit: '审批',
     save: '保存',
@@ -133,11 +134,18 @@ var struct = {
     configText: '配置文案',
     theme: '主题切换'
   },
+  workflow: {
+    toUpload: '拖拽或点击上传',
+    workflow: '工作流',
+    required: '不能为空',
+    save: '保存'
+  },
   'audit': {
     'cTime': '创建时间',
     'process': '审核处理',
     'workflow': '工作流',
     'reset': '重置',
+    'applicant': '申请人',
     'requiredMessage': '请输入',
     'applyLabel': '我的申请',
     'historyLabel': '审核历史',

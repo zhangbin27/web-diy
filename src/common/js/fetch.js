@@ -1,5 +1,3 @@
-import merge from 'lodash/merge'
-
 const eventHandler = {
   redirect (data) {
     window.location.pathname = data.params.toUrl
@@ -46,7 +44,7 @@ const func = (url, parameters, option) => {
       return Promise.reject(new Error('duplicate request error...'))
     }
     queen.add(key)
-    const params = merge({}, {
+    const params = Object.assign({}, {
       credentials: 'include',
       method: 'POST',
       headers: headers,
