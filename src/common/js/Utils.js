@@ -3,6 +3,7 @@ import _constants from './constants'
 import _validator from './validator'
 import _API from './API'
 import _lang from './lang'
+import Cookie from 'js-cookie/src/js.cookie'
 
 var utils = {
   fetch: _fetch,
@@ -17,7 +18,12 @@ var utils = {
   }
 }
 
+function _getLoginStatus () {
+  return !!Cookie.get('token')
+}
+
 export const lang = _lang
+export const getLoginStatus = _getLoginStatus
 export const constants = _constants
 export const validator = _validator
 export const fetch = _fetch

@@ -1,13 +1,16 @@
 <template lang="pug">
   .config-workflow
     el-form(:model="newWorkflow" :rules="rules" ref="workflow").add.clear-float
-      el-col(:span="6")
-        el-form-item(prop="name")
-          b-input(:model.sync="newWorkflow.name" :placeholder="rdata.workflow")
-      el-col(:span="3" :offset="15")
-        b-button(type="primary" @click="add") {{rdata.save}}
+      el-row(:gutter="10")
+        el-col(:span="6")
+            b-input(:model.sync="searchKey" :placeholder="rdata.searchWorkflow")
+        el-col(:span="6"  :offset="9")
+          el-form-item(prop="name")
+            b-input(:model.sync="newWorkflow.name" :placeholder="rdata.newWorkflow")
+        el-col(:span="3")
+          b-button(type="primary" @click="add") {{rdata.create}}
     el-collapse(v-model="currWorkflow" :accordion='true')
-      el-collapse-item(:title="w.name" :name="idx" v-for="(w,idx) in workflowList" :key="idx")
+      el-collapse-item(:title="w.name" :name="idx" v-for="(w,idx) in cWorkflowList" :key="idx")
         bpmn(:workflow="w" v-if="currWorkflow==idx" @close="closeBpmn")
 </template>
 
@@ -30,6 +33,7 @@
           name: ''
         },
         rdata: rdata,
+        searchKey: '',
         workflowList: [],
         currWorkflow: -1,
         rules: {
@@ -49,7 +53,11 @@
         Object.assign(this.rdata, res)
       })
     },
-    computed: {},
+    computed: {
+      cWorkflowList () {
+        return this.workflowList.filter(w => w.name.includes(this.searchKey))
+      }
+    },
     methods: {
       closeBpmn () {
         console.log('closeBpmn')
@@ -63,7 +71,7 @@
       add () {
         this.$refs['workflow'].validate(re => {
           if (re) {
-            service.add().then(() => {
+            service.add(this.newWorkflow).then(() => {
               this.getWorkflowList()
             })
           }

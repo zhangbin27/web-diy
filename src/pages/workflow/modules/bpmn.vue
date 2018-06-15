@@ -25,12 +25,15 @@
     },
     methods: {
       toggle (close = false) {
-        $('#app').toggleClass('hidden')
-        $('.bpmn-root').toggleClass('hidden')
         if (close) {
-          console.log('close $emit$emit', close)
           this.$emit('close')
+          $('#app').removeClass('hidden')
+          $('.bpmn-root').addClass('hidden')
+        } else {
+          $('#app').addClass('hidden')
+          $('.bpmn-root').removeClass('hidden')
         }
+        console.log('close', close)
       }
     },
     mounted () {

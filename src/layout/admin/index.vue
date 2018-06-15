@@ -50,14 +50,6 @@
 </script>
 
 <style lang="less">
-  html {
-    height: 100%;
-    body {
-      height: 100%;
-      min-width: 850px;
-    }
-  }
-
   .layout.vertical {
     height: 100%;
     > .container {

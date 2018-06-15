@@ -123,6 +123,7 @@ var struct = {
     'searchFields': []
   },
   admin: {
+    logout: '登出',
     module: '模块',
     workflow: '工作流',
     editor: '编辑器',
@@ -135,12 +136,14 @@ var struct = {
     theme: '主题切换'
   },
   workflow: {
+    searchWorkflow: '请输入过滤条件',
     toUpload: '拖拽或点击上传',
     workflow: '工作流',
     required: '不能为空',
-    save: '保存'
+    newWorkflow: '新建工作流名称',
+    create: '新建'
   },
-  'audit': {
+  audit: {
     'cTime': '创建时间',
     'process': '审核处理',
     'workflow': '工作流',
@@ -328,6 +331,22 @@ var struct = {
         }
       ]
     }
+  },
+  sign: {
+    'accountNameNotMatch': '帐号密码不一致',
+    'pleaseLogin': '请先登陆',
+    'tooltip': '提示',
+    'confirm': '确定',
+    'confirmPwd': '确认密码',
+    'pwdNoMatch': '密码与确认密码不一致',
+    'login': '登陆',
+    'pwdAndConfirm': '密码/确认密码',
+    'name': '名称',
+    'signUp': '注册',
+    'userName': '名称',
+    'networkError': '网络错误',
+    'password': '密码',
+    'notEmpty': '不能为空'
   }
 }
 export default struct

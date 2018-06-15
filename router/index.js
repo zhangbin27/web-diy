@@ -14,8 +14,9 @@ router.post('/page/list', function (req, res) {
   var {page, pageNum: num, pageSize: size, searchData} = req.body
   var data = cache.data[page].filter(row => Object.keys(searchData).every(field => {
     var param = searchData[field]
-    var value = Date.parse(row[field])
+    var value = row[field]
     if (Array.isArray(param)) {
+      value = Date.parse(row[field])
       var [start = -Infinity, end = Infinity] = param
       return value > Date.parse(start) && value < Date.parse(end)
     } else {

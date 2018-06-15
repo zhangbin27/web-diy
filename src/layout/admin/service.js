@@ -76,6 +76,9 @@ export default {
   getColors () {
     return Promise.resolve(JSON.parse(localStorage.getItem('colors')) || [])
   },
+  logout () {
+    return Promise.resolve({re: 200})
+  },
   getLayout () {
     return Promise.resolve(localStorage.getItem('layout') || 'horizontal')
   },
