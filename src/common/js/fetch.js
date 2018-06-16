@@ -1,3 +1,4 @@
+/* eslint-disable */
 const eventHandler = {
   redirect (data) {
     window.location.pathname = data.params.toUrl
@@ -31,8 +32,8 @@ const headers = {
 }
 
 const queen = new Set()
-const basicUrl = 'http://localhost:3000'
-// const basicUrl = ''
+// const basicUrl = 'http://localhost:3000'
+const basicUrl = process.env.backend_url
 const func = (url, parameters, option) => {
   if (!url.includes('http')) {
     url = basicUrl + url
