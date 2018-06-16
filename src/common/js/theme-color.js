@@ -19,5 +19,5 @@ if (window.changeColor) {
 } else {
   window.changeColor = [handler]
 }
-var colors = JSON.parse(localStorage.getItem('colors'))
+var colors = JSON.parse(localStorage.getItem('colors')) || []
 handler(colors)
