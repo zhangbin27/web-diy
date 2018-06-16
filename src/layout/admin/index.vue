@@ -1,10 +1,10 @@
 <template lang="pug">
-  .layout(:class="[layout, 'theme-'+theme]")
+  .layout(:class="[config.layout, 'theme-'+config.theme]")
     .container.clear-float
       .nav-container.theme-bg-B
-        admin-nav(:rdata="rdata", :layout="layout")
+        admin-nav(:rdata="rdata", :config="config")
       .content.theme-bg-H
-        admin-header(:rdata="rdata" @refresh="refresh" :config="{layout, theme}")
+        admin-header(:rdata="rdata" @refresh="refresh" :config="config")
         router-view
 </template>
 
@@ -17,30 +17,36 @@
     name: 'admin-layout',
     data () {
       return {
-        layout: 'horizontal',
-        theme: 'default',
+        config: {
+          layout: '',
+          theme: '',
+          colors: [],
+          text: {}
+        },
         rdata: service.getRenderDataSync({page: 'admin'})
       }
     },
-    created () {
-      var params = {page: 'admin'}
-      service.getRenderData(params).then(res => {
-        Object.assign(this.rdata, res)
-      })
-    },
     methods: {
-      refresh () {
-        this.getConfig()
+      async refresh (type) {
+        console.log('refresh type', type)
+        if (type === 'colors') {
+          window.changeColor.forEach(fn => fn(this.config.colors))
+        }
+        await service.setConfig(this.config)
+        if (type === 'text') {
+          window.location.reload()
+        }
       },
       getConfig () {
-        service.getConfig().then(res => {
-          this.layout = res.layout
-          this.theme = res.theme
+        return service.getConfig().then(({data}) => {
+          this.config = data
+          Object.assign(this.rdata, service.getRenderData('admin', data.text))
+          window.changeColor.forEach(fn => fn(data.colors))
         })
       }
     },
-    mounted () {
-      this.getConfig()
+    async mounted () {
+      await this.getConfig()
     },
     components: {
       adminNav,

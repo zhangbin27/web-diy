@@ -1,6 +1,6 @@
 <template lang="pug">
   el-form.custom-form.c-form(:model="model", ref="tempForm", labelPosition='left')
-    el-form-item(:label-width="labelWidth", :prop="item.key", :rules="getRules(item)" v-for="(item, idx) in cFormItemList", :key="idx", :label="item.type=='clause'?'':item.label" v-if="show(item)")
+    el-form-item(:label-width="labelWidth", :prop="item.key", :rules="getRules(item)" v-for="(item, idx) in cFormItems", :key="idx", :label="item.type=='clause'?'':item.label" v-if="show(item)")
       b-form-item(:model.sync='model[item.key]', :item='item', @change="itemChange", :disabled="disabled", :rdata="rdata")
 </template>
 
@@ -34,7 +34,7 @@
         required: true,
         type: Object
       },
-      formItemList: {
+      formItems: {
         required: true,
         type: Array
       },
@@ -47,8 +47,8 @@
       }
     },
     computed: {
-      cFormItemList () {
-        return this.formItemList.filter(item => item.edit)
+      cFormItems () {
+        return this.formItems.filter(item => item.edit)
       }
     },
     methods: {
@@ -121,15 +121,15 @@
       BFormItem
     },
     watch: {
-      formItemList (newVal, oldVal) {
-        this.formItemList.forEach(item => {
+      formItems (newVal, oldVal) {
+        this.formItems.forEach(item => {
           this.allFieldsMap[item.key] = item
           item.beDependentItems = []
           // 给每个字段赋值
           this.$set(this.model, item.key, item.value)
         })
         // 给每个被依赖的form-item 添加 beDependentItems 数组，存放哪些form-item依赖该 form-item
-        this.formItemList.forEach(item => {
+        this.formItems.forEach(item => {
           (item.follow || []).forEach(elm => {
             var target = this.allFieldsMap[elm.key]
             target.beDependentItems.push(item)

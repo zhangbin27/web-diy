@@ -11,7 +11,7 @@
       span(@click="layoutChange('horizontal')" :class="horizontalCls")   horizontal
     span.colors.theme-color-A(@click="chooseColor")  {{rdata.color}}
     span.text.theme-color-A(@click="configText")  {{rdata.configText}}
-    component(:is="visible.dialog", :rdata="rdata", @close="closeModal", :colors="colors")
+    component(:is="visible.dialog" :rdata="rdata" @close="closeModal" :config="config" @refresh="refresh")
 </template>
 
 <script>
@@ -24,7 +24,6 @@
     name: 'admin-header',
     data () {
       return {
-        colors: [],
         visible: {dialog: null}
       }
     },
@@ -69,16 +68,13 @@
       }
     },
     methods: {
+      refresh () {
+        this.$emit('refresh', ...arguments)
+      },
       logout () {
         service.logout().then(() => {
           Cookie.remove('token')
           this.$router.push('/sign')
-        })
-      },
-      getColors () {
-        service.getColors().then(colors => {
-          this.colors = colors
-          window.changeColor.forEach(fn => fn(this.colors))
         })
       },
       closeModal () {
@@ -91,26 +87,17 @@
         this.visible.dialog = 'edit-color'
       },
       themeChange (theme) {
-        if (this.config.theme === theme) {
-          return
-        }
+        if (this.config.theme === theme) return
         this.config.theme = theme
-        service.setTheme({theme}).then(() => {
-          this.$emit('refresh')
-        })
+        this.$emit('refresh')
       },
       layoutChange (layout) {
-        if (this.layout === layout) {
-          return
-        }
-        this.layout = layout
-        service.setLayout({layout}).then(() => {
-          this.$emit('refresh')
-        })
+        if (this.config.layout === layout) return
+        this.config.layout = layout
+        this.$emit('refresh')
       }
     },
     mounted () {
-      this.getColors()
     }
   }
 </script>

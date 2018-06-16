@@ -1,17 +1,19 @@
-import { fetch, API, lang } from 'common/js/Utils'
+import { fetch, lang } from 'common/js/Utils'
+import configService from '../../layout/admin/service'
 
 export default {
   getRenderDataSync (params) {
     return lang[params.page]
   },
   getRenderData (params) {
-    var text = JSON.parse(localStorage.getItem('text') || '{}')
-    return Promise.resolve(Object.assign(lang[params.page], text[params.page]))
+    return configService.getConfig().then(({data: {text}}) => {
+      return Object.assign(lang[params.page], text[params.page])
+    })
   },
-  saveEnable (params) {
-    return fetch(API.config_set, params)
+  saveEnable (params, url = '/api/page/edit') {
+    return fetch(url, params)
   },
-  getAuditInfo (page) {
-    return fetch(API.config_get, {page})
+  getAuditInfo (page, url = '/api/page/detail') {
+    return fetch(url, {pid: page})
   }
 }

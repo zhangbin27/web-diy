@@ -1,10 +1,11 @@
 export default {
   config_set: '/api/config/set',
-  config_list: '/api/config/list',
   config_get: '/api/config/get',
-  // crud
+  // page
   page_list: '/api/page/list',
-  page_detail: '/api/page/detail',
-  page_delete: '/api/page/delete',
-  page_edit: '/api/page/edit'
+  // crud
+  data_list: '/api/data/list',
+  data_detail: '/api/data/detail',
+  data_delete: '/api/data/delete',
+  data_edit: '/api/data/edit'
 }

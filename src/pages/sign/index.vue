@@ -3,8 +3,8 @@
     <el-tabs v-model="currTab" class="form-container">
       <el-tab-pane name="signIn" :label="rdata.login">
         <el-form :model="info" :rules="rules" ref="form">
-          <el-form-item :label="rdata.name" prop="username">
-            <b-input :model.sync="info.username" :placeholder="rdata.userName"></b-input>
+          <el-form-item :label="rdata.name" prop="uid">
+            <b-input :model.sync="info.uid" :placeholder="rdata.userName"></b-input>
           </el-form-item>
           <el-form-item :label="rdata.password" prop="password">
             <b-input :model.sync="info.password" type="password" @keyup.enter.native="login"
@@ -17,8 +17,8 @@
       </el-tab-pane>
       <el-tab-pane name="signUp" :label="rdata.signUp">
         <el-form :model="signUpInfo" :rules="signUpRules" ref="signUpForm">
-          <el-form-item :label="rdata.name" prop="username">
-            <b-input :model.sync="signUpInfo.username" :placeholder="rdata.userName"></b-input>
+          <el-form-item :label="rdata.name" prop="uid">
+            <b-input :model.sync="signUpInfo.uid" :placeholder="rdata.userName"></b-input>
           </el-form-item>
           <el-form-item :label="rdata.pwdAndConfirm" prop="password">
             <b-input :model.sync="signUpInfo.password" type="password" :placeholder="rdata.password"></b-input>
@@ -51,17 +51,17 @@
         rdata: rdata,
         theme: 'default',
         info: {
-          username: '',
+          uid: '',
           password: ''
         },
         signUpInfo: {
-          username: '',
+          uid: '',
           confirmPwd: '',
           password: ''
         },
         currTab: 'signIn',
         rules: {
-          username: [
+          uid: [
             {
               require: true,
               trigger: 'blur',
@@ -77,7 +77,7 @@
           ]
         },
         signUpRules: {
-          username: [
+          uid: [
             {
               require: true,
               trigger: 'blur',
@@ -127,9 +127,10 @@
         this.$refs['signUpForm'].validate(valid => {
           if (valid) {
             var params = this.signUpInfo
-            service.signUp(params).then(res => {
-              if (res.data.status === '1') {
-                this.$router.push({path: '/admin/editor'})
+            service.signUp(params).then(({re}) => {
+              if (re === 200) {
+                this.info = this.signUpInfo
+                this.login()
               } else {
                 this.$message({type: 'error', message: this.rdata.networkError})
               }
@@ -138,9 +139,7 @@
         })
       },
       getConfig () {
-        service.getConfig().then(res => {
-          this.theme = res.theme
-        })
+        this.theme = 'default'
       }
     },
     mounted () {

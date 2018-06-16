@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { fetch, API, lang } from 'common/js/Utils'
+import configService from '../../layout/admin/service'
 
 export default {
   getWorkflowList () {
@@ -234,14 +235,17 @@ export default {
     return lang[params.page]
   },
   getRenderData (params) {
-    var text = JSON.parse(localStorage.getItem('text') || '{}')
-    var pageLang = Object.assign(lang[params.page], text[params.page])
-    var str = JSON.stringify(pageLang)
-    var keys = ['__auditor__', '__status__', '__cTime__', '__endTime__', '__applicant__',
-      '__detail__', '__cancel__', '__workflow__', '__nextAuditor__', '__process__']
-    keys.forEach(key => {
-      str = str.replace(new RegExp(key, 'g'), pageLang[key])
+    // var text = JSON.parse(localStorage.getItem('text') || '{}')
+    return configService.getConfig().then(({data: {text}}) => {
+      var pageLang = Object.assign(lang[params.page], text[params.page])
+      var str = JSON.stringify(pageLang)
+      var keys = ['__auditor__', '__status__', '__cTime__', '__endTime__', '__applicant__',
+        '__detail__', '__cancel__', '__workflow__', '__nextAuditor__', '__process__']
+      keys.forEach(key => {
+        str = str.replace(new RegExp(key, 'g'), pageLang[key])
+      })
+      return JSON.parse(str)
     })
-    return Promise.resolve(JSON.parse(str))
+
   }
 }

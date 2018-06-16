@@ -4,7 +4,7 @@
       el-form-item(prop="workflow", :label="rdata.workflow")
         b-select(:model.sync="basicInfo.workflow" @change="getApplyForm")
           el-option(v-for="op in workflowList" :label="op.label" :value="op.key" :key="op.key")
-    c-form(:model="tmpData", ref="tmpForm", :formItemList="formItemList", :rdata="rdata", :visible="{dialog:'add'}")
+    c-form(:model="tmpData", ref="tmpForm", :formItems="formItems", :rdata="rdata", :visible="{dialog:'add'}")
     .footer
       b-button(@click="reset") {{rdata.reset}}
       b-button(@click="save", type="primary") {{rdata.save}}
@@ -37,7 +37,7 @@
           workflow: ''
         },
         workflowList: [],
-        formItemList: []
+        formItems: []
       }
     },
     props: {
@@ -55,8 +55,8 @@
       getApplyForm () {
         var params = this.basicInfo
         service.getApplyForm(params).then(res => {
-          this.formItemList = res
-          this.formItemList.forEach(item => {
+          this.formItems = res
+          this.formItems.forEach(item => {
             this.$set(item, 'value', '')
             // this.$set(this.tmpData, item.key, '')
           })

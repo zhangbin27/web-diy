@@ -1,93 +1,22 @@
-import { fetch, API, lang } from 'common/js/Utils'
+import { fetch, API, lang, colorsList } from 'common/js/Utils'
 
 export default {
   getColorListSync () {
-    return [
-      [{'key': '@A', 'label': 'main_color', 'value': '#8000ff'}, {
-        'key': '@B',
-        'label': 'auxiliary_color',
-        'value': '#ff8080'
-      }, {'key': '@C', 'label': 'text_color', 'value': '#000040'}, {
-        'key': '@D',
-        'label': 'line_color',
-        'value': '#e2e2e2'
-      }, {'key': '@E', 'label': 'positive_color', 'value': '#00ff40'}, {
-        'key': '@F',
-        'label': 'alert_color',
-        'value': '#ffff00'
-      }, {'key': '@G', 'label': 'negative_color', 'value': '#ff0000'}, {
-        'key': '@H',
-        'label': 'bright_color',
-        'value': '#f8fff0'
-      }, {'key': '@I', 'label': 'form_color', 'value': '#e6ffe6'}, {
-        'key': '@J',
-        'label': 'header_color',
-        'value': '#f0f0f0'
-      }], [{'key': '@A', 'label': 'main_color', 'value': '#0080ff'}, {
-        'key': '@B',
-        'label': 'auxiliary_color',
-        'value': '#f78c95'
-      }, {'key': '@C', 'label': 'text_color', 'value': '#000000'}, {
-        'key': '@D',
-        'label': 'line_color',
-        'value': '#d3dad8'
-      }, {'key': '@E', 'label': 'positive_color', 'value': '#ff80c0'}, {
-        'key': '@F',
-        'label': 'alert_color',
-        'value': '#ffde7b'
-      }, {'key': '@G', 'label': 'negative_color', 'value': '#e1bf1e'}, {
-        'key': '@H',
-        'label': 'bright_color',
-        'value': '#FFFEFA'
-      }, {'key': '@I', 'label': 'form_color', 'value': '#dedede'}, {
-        'key': '@J',
-        'label': 'header_color',
-        'value': '#000000'
-      }], [{'key': '@A', 'label': 'main_color', 'value': '#71DAF9'}, {
-        'key': '@B',
-        'label': 'auxiliary_color',
-        'value': '#FFA476'
-      }, {'key': '@C', 'label': 'text_color', 'value': '#367F9F'}, {
-        'key': '@D',
-        'label': 'line_color',
-        'value': '#004080'
-      }, {'key': '@E', 'label': 'positive_color', 'value': '#C4E6B1'}, {
-        'key': '@F',
-        'label': 'alert_color',
-        'value': '#FFEFBD'
-      }, {'key': '@G', 'label': 'negative_color', 'value': '#FFA8C6'}, {
-        'key': '@H',
-        'label': 'bright_color',
-        'value': '#FFFEFA'
-      }, {'key': '@I', 'label': 'form_color', 'value': '#F9FDFE'}, {
-        'key': '@J',
-        'label': 'header_color',
-        'value': '#6ACAE7'
-      }]
-    ]
+    return colorsList
   },
   getRenderDataSync (params) {
     return lang[params.page]
   },
-  getRenderData (params) {
-    var text = JSON.parse(localStorage.getItem('text') || '{}')
-    return Promise.resolve(Object.assign(lang[params.page], text[params.page]))
-  },
-  getColors () {
-    return Promise.resolve(JSON.parse(localStorage.getItem('colors')) || [])
-  },
-  logout () {
-    return Promise.resolve({re: 200})
-  },
-  getLayout () {
-    return Promise.resolve(localStorage.getItem('layout') || 'horizontal')
-  },
-  setColors (colors) {
-    localStorage.setItem('colors', JSON.stringify(colors))
-    return Promise.resolve({re: 200})
+  logout (params = {}, url = '/api/user/logout') {
+    // return Promise.resolve({re: 200})
+    return fetch(url, params)
   },
   getPages () {
-    return fetch(API.config_list, {})
+    return fetch(API.page_list, {})
+  },
+  // api
+  getRenderData (page, text) {
+    return Object.assign(lang[page], text[page])
   },
   getText () {
     return Promise.resolve(JSON.parse(localStorage.getItem('text')))
@@ -96,18 +25,19 @@ export default {
     localStorage.setItem('text', JSON.stringify(data))
     return Promise.resolve({re: 200})
   },
-  setLayout ({layout}) {
-    localStorage.setItem('layout', layout)
-    return Promise.resolve({re: 200})
+  setConfig (params = {}, url = '/api/config/edit') {
+    return fetch(url, params)
   },
-  setTheme ({theme}) {
-    localStorage.setItem('theme', theme)
-    return Promise.resolve({re: 200})
-  },
-  getConfig () {
-    return Promise.resolve({
-      layout: localStorage.getItem('layout') || 'horizontal',
-      theme: localStorage.getItem('theme') || 'default'
+  getConfig (params = {}, url = '/api/config/detail') {
+    return fetch(url + '?key=' + new Date().getTime(), params).then(res => {
+      console.log('getConfig res', res)
+      res.data = res.data || {
+        layout: 'horizontal',
+        theme: 'default',
+        colors: colorsList[2],
+        text: lang
+      }
+      return res
     })
   }
 }

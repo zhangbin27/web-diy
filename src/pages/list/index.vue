@@ -1,12 +1,13 @@
 <template lang="pug">
   .list
     .oper-container.clear-float
-      i.el-icon-plus(@click="add", :title="rdata.add")
-      i.icon.iconfont.icon-user_profile_icon_1(@click="viewGraph", :title="rdata.viewGraph")
-      i.el-icon-setting(@click="editConfig", :title="rdata.editConfig")
-    b-search-table(:optHandler='optHandler', :rdata="rdata", :url="pageInfo.listUrl", ref="table" v-if="!switching&&pageInfo.listUrl")
+      i.el-icon-plus(@click="add" :title="rdata.add")
+      i.icon.iconfont.icon-user_profile_icon_1(@click="viewGraph" :title="rdata.viewGraph")
+      i.el-icon-setting(@click="editConfig" :title="rdata.editConfig")
+    b-search-table(:optHandler='optHandler' :rdata="rdata" :url="pageInfo.listUrl" ref="table" v-if="!switching&&pageInfo.listUrl" :params="{pid:pageInfo.pid}")
 
-    component(:is="visible.dialog", :currRow="currRow", :rdata="rdata", :visible="visible", :pageInfo="pageInfo", :formItemList="formItemList", @refresh="refresh", :table='table', @get-table-data='getTableData')
+    component(:is="visible.dialog" :currRow="currRow" :rdata="rdata" :visible="visible"
+      :pageInfo="pageInfo" :formItems="formItems" @refresh="refresh" :table='table' @get-table-data='getTableData')
 </template>
 
 <script>
@@ -25,7 +26,7 @@
       return {
         pageInfo: {},
         rdata: service.getRenderDataSync({page: 'list'}),
-        formItemList: [],
+        formItems: [],
         table: [],
         switching: false,
         currRow: {},
@@ -60,7 +61,7 @@
         service.getTableConfig(this.page).then(res => {
           this.rdata.searchFields = res.searchFields
           this.rdata.headerCols = res.headerCols
-          this.formItemList = res.formItemList
+          this.formItems = res.formItems
           this.pageInfo = res.info
           cb && cb()
         })

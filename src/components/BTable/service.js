@@ -1,4 +1,4 @@
-import { fetch, parserUrl } from 'common/js/Utils'
+import { fetch } from 'common/js/Utils'
 
 var mock = {
   '/api/applyList': {
@@ -126,7 +126,6 @@ export default {
     if (Object.keys(mock).includes(url)) {
       return Promise.resolve(mock[url])
     }
-    var query = parserUrl(url)
-    return fetch(url, Object.assign(params, query))
+    return fetch(url, params)
   }
 }

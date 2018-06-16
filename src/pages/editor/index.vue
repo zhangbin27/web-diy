@@ -3,8 +3,6 @@
     el-row(:gutter="10").oper-container.clear-float.theme-border-D
       el-col(:span="3", :offset='21')
         b-button(@click='saveEnable' v-ellipsis-title="" type="primary") {{rdata.save}}
-      //el-col(:span="3")
-        b-button(@click='validateForm') {{rdata.validateForm}}
     .content.theme-bg-H
       .left.draggable-item-container
         .title.theme-color-A {{rdata.controlBase}}
@@ -14,7 +12,7 @@
       .middle.theme-bg-I
         el-form.middle-container(label-width="140px", :model="model", ref="tmpForm", label-position="left")
           .title {{auditInfo.name}}
-          .item(v-for="(item, $index) in formItemList", :key="item.key", :idx="$index",  v-dropable="handler", @click="currItem=item")
+          .item(v-for="(item, $index) in formItems", :key="item.key", :idx="$index",  v-dropable="handler", @click="currItem=item")
             .operate-menu
               .icon-conatainer(v-draggable="handler", :idx="$index", origin='middle')
                 b-icon(iconName='move')
@@ -23,7 +21,7 @@
             el-form-item(:prop="item.key", :rules="getRules(item)", :key="$index")
               span.inline-label(slot="label", v-ellipsis-title="", :class="{'theme-color-A': currItem===item}") {{item.type=='clause'?'':item.label}}
               b-form-item(:model.sync='model[item.key]', :item='item', @change="itemChange", :rdata="rdata")
-          .blank-item(v-dropable="handler", :idx="formItemList.length")
+          .blank-item(v-dropable="handler", :idx="formItems.length")
             .line
               b-icon(iconName='move1', size="50px")
             .line {{rdata.addControlCreatorAudit}}
@@ -33,8 +31,8 @@
             el-form(ref="auditInfoForm", :rules="rules", :model="auditInfo", label-position="left").form-info
               el-form-item(prop="name", :label="rdata.workflowName")
                 b-input(:model.sync="auditInfo.name", :placeholder="rdata.pleaseInput")
-              el-form-item(prop="_key", :label="rdata.pageId")
-                b-input(:model.sync="auditInfo._key", :placeholder="rdata.pleaseInput")
+              el-form-item(prop="pid", :label="rdata.pageId")
+                b-input(:model.sync="auditInfo.pid", :placeholder="rdata.pleaseInput")
               el-form-item(prop="listUrl", label="List Url")
                 b-input(:model.sync="auditInfo.listUrl", :placeholder="rdata.pleaseInput")
               el-form-item(prop="deleteUrl", label="Delete Url")
@@ -43,12 +41,8 @@
                 b-input(:model.sync="auditInfo.detailUrl", :placeholder="rdata.pleaseInput")
               el-form-item(prop="editUrl", label="Edit Url")
                 b-input(:model.sync="auditInfo.editUrl", :placeholder="rdata.pleaseInput")
-              //el-form-item(prop="description.label")
-                template(slot="label")
-                  span.theme-color-C.inline-label(v-text="rdata.description", v-ellipsis-title="")
-                b-input(:model.sync="auditInfo.description.label", :placeholder="rdata.pleaseInput", :rows="3")
           el-tab-pane(name="2", :label="rdata.controlSet")
-            form-item-set(v-for="(item, $index) in formItemList",:key='$index', v-show="currItem==item", :item="item", :rdata="rdata", :allFormItems="formItemList", ref="formItemSet")
+            form-item-set(v-for="(item, $index) in formItems",:key='$index', v-show="currItem==item", :item="item", :rdata="rdata", :allFormItems="formItems", ref="formItemSet")
 
 </template>
 
@@ -66,6 +60,7 @@
     name: 'form-set',
     data () {
       var _this = this
+      var pid = 'pid_' + new Date().getTime()
       return {
         page: this.$router.currentRoute.query.page,
         allFieldsMap: {},
@@ -73,19 +68,15 @@
         formSet: {},
         currItem: {},
         auditInfo: {
+          pid: pid,
           name: '',
-          'listUrl': '/api/page/list?page=ceshi',
-          'detailUrl': '/api/page/detail?page=ceshi',
-          'deleteUrl': '/api/page/delete?page=ceshi',
-          'editUrl': '/api/page/edit?page=ceshi',
-          _key: '',
-          description: {
-            label: '',
-            key: ''
-          }
+          'listUrl': '/api/data/list?page=' + pid,
+          'detailUrl': '/api/data/detail?page=' + pid,
+          'deleteUrl': '/api/data/delete?page=' + pid,
+          'editUrl': '/api/data/edit?page=' + pid
         },
         activePane: '1',
-        formItemList: [],
+        formItems: [],
         handler: {
           drop (event) {
             var el = event.target
@@ -96,12 +87,12 @@
             var sourceIdx = parseInt(event.dataTransfer.getData('sourceIdx'))
             var targetIdx = parseInt(event.target.getAttribute('idx'))
             if (origin === 'middle') {
-              var sourceData = _this.formItemList[sourceIdx]
-              _this.formItemList.splice(targetIdx + 1, 0, sourceData)
+              var sourceData = _this.formItems[sourceIdx]
+              _this.formItems.splice(targetIdx + 1, 0, sourceData)
               if (sourceIdx < targetIdx + 1) {
-                _this.formItemList.splice(sourceIdx, 1)
+                _this.formItems.splice(sourceIdx, 1)
               } else {
-                _this.formItemList.splice(sourceIdx + 1, 1)
+                _this.formItems.splice(sourceIdx + 1, 1)
               }
             } else {
               // 添加到target下
@@ -112,10 +103,10 @@
                 key: '',
                 rules: []
               }, template)
-              if (targetIdx === _this.formItemList.length) {
-                _this.formItemList.splice(0, 0, newItem)
+              if (targetIdx === _this.formItems.length) {
+                _this.formItems.splice(0, 0, newItem)
               } else {
-                _this.formItemList.splice(targetIdx + 1, 0, newItem)
+                _this.formItems.splice(targetIdx + 1, 0, newItem)
               }
             }
             el.className = el.className.replace(/dragenter/g, '').replace(/theme\\-border\\-D/g, '')
@@ -282,7 +273,7 @@
               trigger: 'blur'
             }
           ],
-          _key: [
+          pid: [
             {
               required: true,
               message: this.rdata.pleaseInput,
@@ -293,22 +284,6 @@
             {
               required: true,
               message: this.rdata.pleaseInput,
-              trigger: 'blur'
-            }
-          ],
-          'description.label': [
-            {
-              regex: constants.text0To128Limit,
-              validator: validator.validate,
-              message: this.rdata.textLength128,
-              trigger: 'blur'
-            },
-            {
-              validator: validator.validate,
-              message: this.rdata.noAllowSpace,
-              test (val) {
-                return val.trim() === val
-              },
               trigger: 'blur'
             }
           ]
@@ -388,14 +363,14 @@
             valid = valid && res
             if (!valid) {
               this.activePane = '2'
-              this.currItem = this.formItemList[idx]
+              this.currItem = this.formItems[idx]
             }
           })
         })
         if (valid) {
           var params = {
             ...this.auditInfo,
-            formItemList: this.formItemList
+            formItems: this.formItems
           }
           service.saveEnable(params).then(res => {
             this.$message({type: 'success', message: this.rdata.operateSuccess})
@@ -404,15 +379,14 @@
         }
       },
       deleteFormItem (idx) {
-        this.formItemList.splice(idx, 1)
+        this.formItems.splice(idx, 1)
       },
       getAuditInfo (page) {
         return service.getAuditInfo(page).then(res => {
           Object.assign(this.auditInfo, res.data)
-          this.formItemList = res.data.formItemList
-          // 给每个formItem 加上value: '' (type == file 的时候 value: {})
-          this.formItemList.forEach(item => {
-            this.$set(item, 'value', item.type === 'upload' ? {} : '')
+          this.formItems = res.data.formItems
+          this.formItems.forEach(item => {
+            this.$set(item, 'value', '')
           })
         })
       }
@@ -431,18 +405,18 @@
       BInput
     },
     watch: {
-      formItemList (newVal, oldVal) {
-        if (this.formItemList.length === 1) {
-          this.currItem = this.formItemList[0]
+      formItems (newVal, oldVal) {
+        if (this.formItems.length === 1) {
+          this.currItem = this.formItems[0]
         }
-        this.formItemList.forEach(item => {
+        this.formItems.forEach(item => {
           this.allFieldsMap[item.key] = item
           item.beDependentItems = []
           // 给每个字段赋值
           this.$set(this.model, item.key, item.value || '')
         })
         // 给每个被依赖的form-item 添加 beDependentItems 数组，存放哪些form-item依赖该 form-item
-        this.formItemList.forEach(item => {
+        this.formItems.forEach(item => {
           (item.follow || []).forEach(elm => {
             var target = this.allFieldsMap[elm.key]
             target.beDependentItems.push(item)

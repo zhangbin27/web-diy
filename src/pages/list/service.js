@@ -1,40 +1,39 @@
 /* eslint-disable */
 import { fetch, API, parserUrl, lang } from 'common/js/Utils'
+import configService from '../../layout/admin/service'
 
 export default {
   getRenderDataSync (params) {
     return lang[params.page]
   },
   getRenderData (params) {
-    var text = JSON.parse(localStorage.getItem('text') || '{}')
-    var pageLang = Object.assign(lang[params.page], text[params.page])
-    var str = JSON.stringify(pageLang)
-    var keys = ['__edit__', '__delete__', '__detail__']
-    keys.forEach(key => {
-      str = str.replace(new RegExp(key, 'g'), pageLang[key])
+    return configService.getConfig().then(({data: {text}}) => {
+      var pageLang = Object.assign(lang[params.page], text[params.page])
+      var str = JSON.stringify(pageLang)
+      var keys = ['__edit__', '__delete__', '__detail__']
+      keys.forEach(key => {
+        str = str.replace(new RegExp(key, 'g'), pageLang[key])
+      })
+      return JSON.parse(str)
     })
-    return Promise.resolve(JSON.parse(str))
   },
   delete (row, url) {
-    var query = parserUrl(url)
-    return fetch(url, Object.assign(query, {row}))
+    return fetch(url, row)
   },
   getDetail (row, url) {
-    var query = parserUrl(url)
-    return fetch(url, Object.assign(query, {row}))
+    return fetch(url, row)
   },
-  edit ({page: page, data: params}, url) {
-    var query = parserUrl(url)
-    return fetch(url, Object.assign(query, {params}))
+  edit (params, url) {
+    return fetch(url, params)
   },
   getTableConfig (page = '') {
-    return fetch(API.config_get, {page}).then(({data}) => {
-      var {formItemList} = data
+    return fetch('/api/page/detail', {pid: page}).then(({data}) => {
+      var {formItems} = data
       return {
         info: data,
-        formItemList: formItemList,
-        headerCols: formItemList.map(item => ({field: item.key, label: item.label, list: item.list, type: item.type})),
-        searchFields: formItemList.map(item => ({
+        formItems: formItems,
+        headerCols: formItems.map(item => ({field: item.key, label: item.label, list: item.list, type: item.type})),
+        searchFields: formItems.map(item => ({
           search: item.search,
           field: item.key,
           dataSource: item.dataSource,

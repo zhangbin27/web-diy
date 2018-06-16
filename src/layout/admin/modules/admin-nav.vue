@@ -1,6 +1,6 @@
 <template lang="pug">
   el-menu.admin-nav(:default-active="activePage", @open="handleOpen", @close="handleClose" :mode="mode")
-    el-menu-item(:index='page._key' v-for="page in pages", @click="toPage(page._key)", :key="page._key")
+    el-menu-item(:index='page.pid' v-for="page in pages", @click="toPage(page.pid)", :key="page.pid")
       span(slot='title') {{page.name}}
 </template>
 
@@ -22,24 +22,23 @@
         required: true,
         type: Object
       },
-      layout: {
+      config: {
         required: true,
-        type: String,
-        default: 'horizontal'
+        type: Object
       }
     },
     computed: {
       mode () {
-        return this.layout === 'vertical' ? 'horizontal' : 'vertical'
+        return this.config.layout === 'vertical' ? 'horizontal' : 'vertical'
       }
     },
     methods: {
       getPageList () {
         service.getPages().then(res => {
           var pages = res.data
-          pages.unshift({name: this.rdata.audit, _key: 'audit'})
-          pages.unshift({name: this.rdata.workflow, _key: 'workflow'})
-          pages.unshift({name: this.rdata.editor, _key: 'editor'})
+          pages.unshift({name: this.rdata.audit, pid: 'audit'})
+          pages.unshift({name: this.rdata.workflow, pid: 'workflow'})
+          pages.unshift({name: this.rdata.editor, pid: 'editor'})
           this.pages = pages
         })
       },

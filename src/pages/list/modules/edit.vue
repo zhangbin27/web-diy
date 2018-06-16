@@ -1,6 +1,6 @@
 <template lang="pug">
   b-dialog(:show='true', :title="rdata.edit", :show-close="true", :before-close="close" width="40%").edit
-    c-form(:model="tmpData", ref="tmpForm", :formItemList="formItemList", :rdata="rdata", label-width="140px", label-position="left", :visible="visible")
+    c-form(:model="tmpData", ref="tmpForm", :formItems="formItems", :rdata="rdata", label-width="140px", label-position="left", :visible="visible")
     template(slot="footer")
       b-button(@click="close") {{rdata.cancel}}
       b-button(@click="save", type="primary" v-if="!disabled") {{rdata.save}}
@@ -18,7 +18,6 @@
     name: 'edit',
     data () {
       return {
-        page: this.$router.currentRoute.query.page,
         tmpData: {}
       }
     },
@@ -29,7 +28,7 @@
       pageInfo: {
         required: true
       },
-      formItemList: {
+      formItems: {
         required: true
       },
       visible: {
@@ -59,13 +58,11 @@
         this.$refs['tmpForm'].validate(valid => {
           if (valid) {
             var params = {
-              page: this.page,
-              data: {
-                ...this.tmpData,
-                ...this.visible.dialog === 'add' ? {_key: '_key' + new Date().getTime()} : {_key: this.currRow._key}
-              }
+              pid: this.pageInfo.pid,
+              ...this.tmpData,
+              ...this.visible.dialog === 'add' ? {rid: 'rid_' + new Date().getTime()} : {rid: this.currRow.rid}
             }
-            service.edit(params, this.pageInfo.editUrl).then(res => {
+            service.edit(params, this.pageInfo.editUrl).then(() => {
               this.$message({type: 'success', message: this.rdata.operateSuccess})
               this.close()
               this.$emit('refresh')
@@ -75,9 +72,8 @@
       }
     },
     mounted () {
-      // 给每个formItem 加上value: '' (type == file 的时候 value: {})
-      this.formItemList.forEach(item => {
-        this.$set(item, 'value', item.type === 'upload' ? {} : '')
+      this.formItems.forEach(item => {
+        this.$set(item, 'value', '')
       })
       this.getDetail()
     },

@@ -8,9 +8,9 @@
         b-datepicker(:model.sync="applyData.cTime" :disabled="true" type="datetime")
       el-form-item(prop="applicant", :label="rdata.applicant")
         b-input(:model.sync="applyData.applicant" :disabled="true")
-    c-form(:model="applyData", :formItemList="applyForm", :rdata="rdata", :visible="{dialog:'detail'}" :disabled="true").apply-history
-    c-form(v-for="(his, idx) in auditHistory" :key="idx" :model="his.data", :formItemList="his.form", :rdata="rdata", :visible="{dialog:'detail'}" :disabled="true").audit-history
-    c-form(:model="tmpData", ref="tmpForm", :formItemList="formItemList", :rdata="rdata", :visible="{dialog:'detail'}" v-if="visible.dialog=='process'")
+    c-form(:model="applyData", :formItems="applyForm", :rdata="rdata", :visible="{dialog:'detail'}" :disabled="true").apply-history
+    c-form(v-for="(his, idx) in auditHistory" :key="idx" :model="his.data", :formItems="his.form", :rdata="rdata", :visible="{dialog:'detail'}" :disabled="true").audit-history
+    c-form(:model="tmpData", ref="tmpForm", :formItems="formItems", :rdata="rdata", :visible="{dialog:'detail'}" v-if="visible.dialog=='process'")
     .footer(slot="footer" v-if="visible.dialog=='process'")
       b-button(@click="reset") {{rdata.reset}}
       b-button(@click="save", type="primary") {{rdata.save}}
@@ -39,7 +39,7 @@
         },
         tmpData: {},
         workflowList: [],
-        formItemList: [],
+        formItems: [],
         auditHistory: [],
         applyForm: []
       }
@@ -82,8 +82,8 @@
       getAuditForm () {
         var params = this.applyData
         return service.getAuditForm(params).then(res => {
-          this.formItemList = res
-          this.formItemList.forEach(item => {
+          this.formItems = res
+          this.formItems.forEach(item => {
             this.$set(item, 'value', '')
           })
         })

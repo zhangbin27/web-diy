@@ -5,7 +5,7 @@
         b-button(@click="chooseColor(0)") default1
         b-button(@click="chooseColor(1)") default2
         b-button(@click="chooseColor(2)") default3
-      el-col(:span="8"  v-for="(color, idx) in currColors", :key='idx')
+      el-col(:span="8"  v-for="(color, idx) in config.colors", :key='idx')
         el-form-item(:label="color.key", :prop="color.key")
           input(type="color", v-model="color.value")
     template(slot="footer")
@@ -35,7 +35,6 @@
       }
       return {
         colorList: service.getColorListSync(),
-        currColors: this.colors,
         cRules: {
           ...Object.keys(model).reduce((res, key) => {
             res[key] = [{
@@ -53,20 +52,20 @@
       rdata: {
         required: true
       },
-      colors: {
+      config: {
         required: true
       }
     },
     watch: {
-      currColors () {
-        this.currColors.forEach(color => {
+      'config.colors' () {
+        this.config.colors.forEach(color => {
           this.tmpModel[color.key] = color.value
         })
       }
     },
     methods: {
       chooseColor (idx) {
-        this.currColors = this.colorList[idx]
+        this.config.colors = this.colorList[idx]
       },
       close () {
         this.$emit('close')
@@ -74,13 +73,11 @@
       save () {
         this.$refs['form'].validate(res => {
           if (res) {
-            this.currColors.forEach(color => {
+            this.config.colors.forEach(color => {
               color.value = this.tmpModel[color.key]
             })
-            service.setColors(this.currColors).then(res => {
-              window.changeColor.forEach(fn => fn(this.currColors))
-              this.close()
-            })
+            this.$emit('refresh', 'colors')
+            this.close()
           }
         })
       }

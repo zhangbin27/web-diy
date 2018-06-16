@@ -1,24 +1,21 @@
-import {lang} from 'common/js/Utils'
+import { lang, fetch } from 'common/js/Utils'
 
 export default {
   getRenderDataSync (params) {
     return lang[params.page]
   },
-  login (params, url = '/watch/login') {
-    // return fetch(url, {params})
-    return Promise.resolve({
-      re: 200,
-      token: 'zhai'
-    })
+  getRenderData (page, text) {
+    return Object.assign(lang[page], text[page])
   },
-  signUp (params, url = '/watch/login') {
-    // return axios.get(url, {params})
-    return Promise.resolve({re: 200})
+  login (params, url = '/api/user/login') {
+    return fetch(url, params)
+    // return Promise.resolve({
+    //   re: 200,
+    //   token: 'zhai'
+    // })
   },
-  getConfig () {
-    return Promise.resolve({
-      layout: localStorage.getItem('layout') || 'horizontal',
-      theme: localStorage.getItem('theme') || 'default'
-    })
+  signUp (params, url = '/api/user/sign-up') {
+    return fetch(url, params)
+    // return Promise.resolve({re: 200})
   }
 }
