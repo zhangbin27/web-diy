@@ -20,6 +20,9 @@
           <el-form-item :label="rdata.name" prop="uid">
             <b-input :model.sync="signUpInfo.uid" :placeholder="rdata.userName"></b-input>
           </el-form-item>
+          <el-form-item :label="rdata.email" prop="email">
+            <b-input :model.sync="signUpInfo.email" :placeholder="rdata.email"></b-input>
+          </el-form-item>
           <el-form-item :label="rdata.pwdAndConfirm" prop="password">
             <b-input :model.sync="signUpInfo.password" type="password" :placeholder="rdata.password"></b-input>
           </el-form-item>
@@ -78,6 +81,13 @@
         },
         signUpRules: {
           uid: [
+            {
+              require: true,
+              trigger: 'blur',
+              message: rdata.notEmpty
+            }
+          ],
+          email: [
             {
               require: true,
               trigger: 'blur',

@@ -343,7 +343,8 @@ var struct = {
     'pwdAndConfirm': '密码/确认密码',
     'name': '名称',
     'signUp': '注册',
-    'userName': '名称',
+    'userName': '用户名',
+    'email': '邮箱',
     'networkError': '网络错误',
     'password': '密码',
     'notEmpty': '不能为空'
